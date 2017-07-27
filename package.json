@@ -1,0 +1,22 @@
+{
+  "name": "express-admin",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "connect-redis": "^3.3.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "ejs": "~2.4.1",
+    "express": "~4.13.4",
+    "express-session": "^1.15.4",
+    "ioredis": "^3.1.2",
+    "log4js": "^2.3.1",
+    "morgan": "~1.7.0",
+    "mysql": "^2.14.0",
+    "serve-favicon": "~2.3.0"
+  }
+}

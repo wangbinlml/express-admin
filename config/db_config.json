@@ -1,0 +1,32 @@
+{
+  "mysql": {
+    "db_type": "mysql",
+    "db_host": "127.0.0.1",
+    "db_port": "3306",
+    "db_user_name": "test",
+    "db_password": "test",
+    "db_name": "demo",
+    "db_enable_pool": true,
+    "db_pool_max": 10,
+    "db_pool_min": 0,
+    "db_pool_max_idle_time": 10000,
+    "db_show_sql": true
+  },
+  "mongodb": {
+    "db_type": "mongodb",
+    "db_host": [
+      "127.0.0.1:27017"
+    ],
+    "db_name": "demo",
+    "db_replica_set": ""
+  },
+  "redis": {
+    "cluster": false,
+    "connect_info": [
+      {
+        "port": 6379,
+        "host": "127.0.0.1"
+      }
+    ]
+  }
+}

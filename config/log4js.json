@@ -1,0 +1,37 @@
+{
+  "appenders": {
+    "console": {
+      "type": "console"
+    },
+    "express": {
+      "type": "console"
+    },
+    "systemLog": {
+      "type": "dateFile",
+      "filename": "logs/access.log",
+      "pattern": "-yyyy-MM-dd",
+      "alwaysIncludePattern": false
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "console"
+      ],
+      "level": "debug"
+    },
+    "express": {
+      "appenders": [
+        "express"
+      ],
+      "level": "error"
+    },
+    "system": {
+      "appenders": [
+        "console",
+        "systemLog"
+      ],
+      "level": "debug"
+    }
+  }
+}

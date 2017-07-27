@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录 | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="/css/blue.css">
+    <link rel="stylesheet" href="/css/noty.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/javascripts/html5shiv.min.js"></script>
+    <script src="/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="/css/googlefonts.css">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a href="../../index2.html"><b>后台</b>登录</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg"><%= msg %></p>
+        <form id="loginForm" name="loginForm">
+            <div class="form-group has-feedback">
+                <input type="username" id="username" class="form-control" placeholder="请输入用户名">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" id="password" class="form-control" placeholder="请输入密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                        <label>
+                            <input type="checkbox"> 记住我
+                        </label>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="button" id="login" class="btn btn-primary btn-block btn-flat">登录</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+<script src="/javascripts/noty.min.js" type="text/javascript"></script>
+<!-- jQuery 3 -->
+<script src="/javascripts/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="/javascripts/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="/javascripts/icheck.min.js"></script>
+<script>
+    $(function () {
+        $("#login").click(function () {
+            var username = $("#username").val();
+            var password = $('#password').val();
+            if (username == "" || username.trim() == "") {
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '用户名不能为空',
+                    timeout: '2000'
+                }).show();
+            } else if (password == "" || password.trim() == "") {
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '密码不能为空',
+                    timeout: '2000'
+                }).show();
+            } else {
+                console.log($("#loginForm").serialize())
+                $.ajax({
+                    type: "POST",
+                    url: "/login",
+                    data: {username: username, password: password},
+                    asyc: false,
+                    error: function (error) {
+                        new Noty({
+                            type: 'error',
+                            layout: 'topCenter',
+                            text: '内部错误，请稍后再试',
+                            timeout: '2000'
+                        }).show();
+                    },
+                    success: function (result) {
+                        if (result.error) {
+                            new Noty({
+                                type: 'error',
+                                layout: 'topCenter',
+                                text: result.msg || '登录失败   ',
+                                timeout: '2000'
+                            }).show();
+                        } else {
+                            window.location.href = "/";
+                        }
+                    }
+                });
+            }
+        });
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+    });
+</script>
+</body>
+</html>
