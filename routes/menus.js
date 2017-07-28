@@ -1,6 +1,6 @@
-var express = require('express');
-var mysql = require('mysql');
-var router = express.Router();
+const express = require('express');
+const mysql = require('../core/mysql');
+const router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -11,8 +11,8 @@ router.get('/', (req, res, next) => {
     });
 });
 router.get('/load', async (req, res, next) => {
-    var sqlcount = "select count(*) from bs_user_role";
-    var sql = "select * from bs_user_role";
+    var sqlcount = "select count(*) from bs_menu";
+    var sql = "select * from bs_menu";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -27,20 +27,20 @@ router.get('/load', async (req, res, next) => {
     draw = parseInt(draw) || 0;
     var memuCount = await mysql.querySync(sqlcount);
     sql = sql + " ORDER BY parent_id ASC,menu_id ASC limit " + start + "," + length;
-    var res = await mysql.querySync(sql);
+    var result = await mysql.querySync(sql);
     var backResult = {
         draw: draw,
         recordsTotal: memuCount,
         recordsFiltered: memuCount,
         data: []
     };
-    for (var i in res) {
+    for (var i in result) {
         backResult.data.push({
-            id: res[i].menu_id,
-            is: res[i].menu_id + "_",
-            menu_name: res[i].menu_name,
-            menu_url: res[i].menu_url,
-            menu_icon: res[i].menu_icon
+            id: result[i].menu_id,
+            is: result[i].menu_id + "_",
+            menu_name: result[i].menu_name,
+            menu_url: result[i].menu_url,
+            menu_icon: result[i].menu_icon
         });
     }
     res.status(200).json(backResult);
