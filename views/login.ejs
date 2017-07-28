@@ -49,7 +49,7 @@
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
                         <label>
-                            <input type="checkbox"> 记住我
+                            <input type="checkbox" name="is_remember" id="is_remember"> 记住我
                         </label>
                     </div>
                 </div>
@@ -76,6 +76,7 @@
         $("#login").click(function () {
             var username = $("#username").val();
             var password = $('#password').val();
+            var is_remember = $('#is_remember').val();
             if (username == "" || username.trim() == "") {
                 new Noty({
                     type: 'error',
@@ -95,7 +96,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/login",
-                    data: {username: username, password: password},
+                    data: {username: username, password: password, is_remember: is_remember},
                     asyc: false,
                     error: function (error) {
                         new Noty({

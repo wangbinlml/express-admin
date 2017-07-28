@@ -24,7 +24,7 @@
       "appenders": [
         "express"
       ],
-      "level": "error"
+      "level": "info"
     },
     "system": {
       "appenders": [
