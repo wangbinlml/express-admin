@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var log = require('../core/util/logger').getLogger("system");
+var log = require('../core/logger').getLogger("system");
 var app = require('../app');
 var debug = require('debug')('express-admin:server');
 var http = require('http');

@@ -1,21 +1,18 @@
 {
   "mysql": {
-    "db_type": "mysql",
-    "db_host": "127.0.0.1",
-    "db_port": "3306",
-    "db_user_name": "test",
-    "db_password": "test",
-    "db_name": "demo",
-    "db_enable_pool": true,
-    "db_pool_max": 10,
-    "db_pool_min": 0,
-    "db_pool_max_idle_time": 10000,
-    "db_show_sql": true
+    "host": "172.16.169.151",
+    "user": "hbbtest",
+    "password": "hbbtest",
+    "database": "demo",
+    "port": 3306,
+    "connectionLimit": 50,
+    "acquireTimeout": 10000,
+    "charset": "utf8"
   },
   "mongodb": {
     "db_type": "mongodb",
     "db_host": [
-      "127.0.0.1:27017"
+      "172.16.169.150:27017"
     ],
     "db_name": "demo",
     "db_replica_set": ""
@@ -25,7 +22,7 @@
     "connect_info": [
       {
         "port": 6379,
-        "host": "127.0.0.1"
+        "host": "172.16.169.150"
       }
     ]
   }

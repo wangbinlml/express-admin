@@ -41,17 +41,17 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/login', login);
-
 app.use(function (req, res, next) {
     if (auth(req)) {
-        res.render("login", {msg: '您未登录或登录已超时'});
+        res.render("login", {msg: '您未登录或登录已超时！'});
         return;
     }
     next();
 });
+
+app.use('/', routes);
+app.use('/users', users);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
