@@ -24,7 +24,6 @@
     <script src="/javascripts/html5shiv.min.js"></script>
     <script src="/javascripts/respond.min.js"></script>
     <![endif]-->
-
     <!-- Google Font -->
     <link rel="stylesheet" href="/css/googlefonts.css">
 </head>
@@ -73,7 +72,7 @@
 <script src="/javascripts/icheck.min.js"></script>
 <script>
     $(function () {
-        $("#login").click(function () {
+        function login() {
             var username = $("#username").val();
             var password = $('#password').val();
             var is_remember = $('#is_remember').val();
@@ -119,6 +118,14 @@
                         }
                     }
                 });
+            }
+        }
+        $("#login").click(function () {
+            login();
+        });
+        $(document).keyup(function(event){
+            if(event.keyCode ==13){
+                $("#login").trigger("click");
             }
         });
         $('input').iCheck({

@@ -14,6 +14,7 @@
     "express": "~4.13.4",
     "express-session": "^1.15.4",
     "ioredis": "^3.1.2",
+    "lodash": "^4.17.4",
     "log4js": "^2.3.1",
     "morgan": "~1.7.0",
     "mysql": "^2.14.0",
