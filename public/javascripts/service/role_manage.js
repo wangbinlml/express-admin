@@ -1,22 +1,17 @@
 
 $(function () {
-    $('#users').DataTable({
-        'bProcessing': true,
+    $('#roles').DataTable({
         'paging': true,
         'lengthChange': true,
-        'searching': false,
+        'searching': true,
         'info': true,
-        'ajax':'/users/load',
+        'ajax':'/roles/load',
         'autoWidth': true,
         "ordering": false,
         "columns": [
-            {"data": "id"},
-            {"data": "name"},
-            {"data": "user_name"},
-            {"data": "sex"},
-            {"data": "birthday"},
-            {"data": "phone"},
-            {"data": "mail"},
+            {"data": "role_id"},
+            {"data": "role_name"},
+            {"data": "description"},
             {"data": "is"}
         ],
         "language": {

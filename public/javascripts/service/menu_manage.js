@@ -117,8 +117,6 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
 
 $(function () {
     var table = $('#menus').DataTable({
-        "bPaginate": true, //翻页功能
-        "bLengthChange": true, //改变每页显示数据数
         'paging': true,
         'lengthChange': true,
         'searching': true,

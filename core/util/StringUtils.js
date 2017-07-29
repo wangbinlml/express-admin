@@ -1,5 +1,4 @@
 var crypto = require("crypto");
-var moment = require("moment");
 
 // 用户头像背景色
 var HEAD_COLOR_ARR = [

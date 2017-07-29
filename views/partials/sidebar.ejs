@@ -6,7 +6,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <% menus.forEach(function(item,index){ %>
-            <li class="treeview">
+            <li class="treeview <%if(item['menu_id'] == menu_active['parent_id']){%> active menu-open<%}%>">
                 <a href="#">
                     <i class="glyphicon <%= item['menu_icon'] %>"></i> <span><%= item['menu_name'] %></span>
                     <span class="pull-right-container">
@@ -16,7 +16,7 @@
                 <% if(item['menu_child'].length > 0){ %>
                 <ul class="treeview-menu">
                     <% item['menu_child'].forEach(function(child,index){ %>
-                    <li class="active"><a href="<%= child['menu_url'] %>"><i
+                    <li <%if(child['menu_id'] == menu_active['menu_id']){%>class="active"<%}%>><a href="<%= child['menu_url'] %>"><i
                                     class="fa fa-circle-o"></i> <%=index+1%>：<%= child['menu_name'] %></a></li>
                     <% }) %>
                 </ul>

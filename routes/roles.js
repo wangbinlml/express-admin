@@ -4,17 +4,17 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-    res.render('menu', {
+    res.render('role', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/menus'],
-        title: '菜单管理',
-        router: '/menus'
+        menu_active: req.session.menu_active['/roles'],
+        title: '角色管理',
+        router: '/roles'
     });
 });
 router.get('/load', async(req, res, next) => {
-    var sqlcount = "select count(*) count from bs_menu";
-    var sql = "select * from bs_menu";
+    var sqlcount = "select count(*) count from bs_role";
+    var sql = "select * from bs_role";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -28,7 +28,7 @@ router.get('/load', async(req, res, next) => {
     length = parseInt(length) || 0;
     draw = parseInt(draw) || 0;
     var memuCount = await mysql.querySync(sqlcount);
-    sql = sql + " ORDER BY parent_id ASC,menu_id ASC limit " + start + "," + length;
+    sql = sql + " ORDER BY role_id ASC limit " + start + "," + length;
     var result = await mysql.querySync(sql);
     var backResult = {
         draw: draw,
@@ -38,11 +38,10 @@ router.get('/load', async(req, res, next) => {
     };
     for (var i in result) {
         backResult.data.push({
-            id: result[i].menu_id,
-            is: result[i].menu_id + "_",
-            menu_name: result[i].menu_name,
-            menu_url: result[i].menu_url,
-            menu_icon: '<span class="glyphicon '+result[i].menu_icon+'"> ('+result[i].menu_icon+')'
+            role_id: result[i].role_id,
+            is: result[i].role_id + "_",
+            role_name: result[i].role_name,
+            description: result[i].description,
         });
     }
     res.status(200).json(backResult);

@@ -1,8 +1,8 @@
 {
   "mysql": {
-    "host": "172.16.169.151",
-    "user": "hbbtest",
-    "password": "hbbtest",
+    "host": "192.168.3.6",
+    "user": "root",
+    "password": "",
     "database": "demo",
     "port": 3306,
     "connectionLimit": 50,
@@ -22,7 +22,7 @@
     "connect_info": [
       {
         "port": 6379,
-        "host": "172.16.169.150"
+        "host": "127.0.0.1"
       }
     ]
   }

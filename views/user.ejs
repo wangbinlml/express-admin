@@ -5,13 +5,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            菜单
+            用户
             <small>advanced tables</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
             <li><a href="#">系统管理</a></li>
-            <li class="active">菜单管理</li>
+            <li class="active">用户管理</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -29,24 +29,34 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">菜单列表</h3>
+                        <h3 class="box-title">用户列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="menus" class="table table-bordered table-hover">
+                        <table id="users" class="table table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th><input value="all" type="checkbox"
                                            onclick="$('.datatable tbody :checkbox').prop('checked', this.checked);"/>
                                 </th>
-                                <th>菜单名称</th>
-                                <th>菜单URL</th>
-                                <th>菜单图标</th>
+                                <th>用户名称</th>
+                                <th>登录名称</th>
+                                <th>性别</th>
+                                <th>生日</th>
+                                <th>电话号码</th>
+                                <th>邮箱</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
-
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             </tbody>
                         </table>
                     </div>
@@ -61,4 +71,4 @@
     <!-- /.content -->
 </div>
 <% include partials/footer %>
-<script src="/javascripts/service/menu_manage.js"></script>
+<script src="/javascripts/service/user_manage.js"></script>

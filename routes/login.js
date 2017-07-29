@@ -5,7 +5,7 @@ const mysql = require('../core/mysql');
 const _ = require('lodash');
 /* GET home page. */
 router.get('/', (req, res, next) => {
-    const user = req.session.user;
+    const user = req.session && req.session.user;
     if (user) {
         res.redirect("/");
     }
@@ -20,7 +20,7 @@ router.get('/exit', (req, res, next) => {
     res.redirect("/login");
 });
 /* POST */
-router.post("/", async (req, res, next) => {
+router.post("/", async(req, res, next) => {
     console.log(req.body)
     var username = req.body.username;
     var password = req.body.password;
@@ -34,6 +34,7 @@ router.post("/", async (req, res, next) => {
         var menu_roles = await mysql.querySync(sql, user['id']);
         var menus = [];
         var userRole = [];
+        var menu_active = {};
         if (menu_roles.length) {
             for (var i = 0; i < menu_roles.length; i++) {
                 var menuRoleObj = menu_roles[i];
@@ -50,17 +51,20 @@ router.post("/", async (req, res, next) => {
                     menuObj['menu_icon'] = menuRoleObj['menu_icon'];
                     menuObj['menu_child'] = [];
                     menus.push(menuObj);
+                    menu_active[menuRoleObj['menu_url']] = {}
                 } else {
                     for (var j = 0; j < menus.length; j++) {
                         var menuObj = menus[j];
                         var pid = menuObj['menu_id'];
                         if (pid == parent_id) {
-                            var childObj = {};
-                            childObj['menu_id'] = menuRoleObj['menu_id'];
+                            var childObj = {}, menu_id = menuRoleObj['menu_id'], menu_url = menuRoleObj['menu_url'];
+                            childObj['menu_id'] = menu_id;
+                            childObj['parent_id'] = menuRoleObj['parent_id'];
                             childObj['menu_name'] = menuRoleObj['menu_name'];
-                            childObj['menu_url'] = menuRoleObj['menu_url'];
+                            childObj['menu_url'] = menu_url;
                             childObj['menu_icon'] = menuRoleObj['menu_icon'];
                             menuObj['menu_child'].push(childObj);
+                            menu_active[menu_url] = {parent_id: parent_id, menu_id: menu_id}
                         }
                     }
                 }
@@ -69,6 +73,7 @@ router.post("/", async (req, res, next) => {
         }
         req.session.userRole = userRole;
         req.session.menus = menus;
+        req.session.menu_active = menu_active;
         if (is_remember) {
             res.cookie("login.username", username, {
                 // 默认有效期为10年
