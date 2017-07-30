@@ -1,5 +1,6 @@
 <% include partials/header %>
 <% include partials/sidebar %>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -10,7 +11,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
-            <li><a href="#">系统管理</a></li>
+            <li><a href="#">权限管理</a></li>
             <li class="active">用户角色管理</li>
         </ol>
     </section>
@@ -36,16 +37,16 @@
                         <table id="users" class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th><input value="all" type="checkbox"
-                                           onclick="$('.datatable tbody :checkbox').prop('checked', this.checked);"/>
-                                </th>
+                                <th>ID</th>
+                                <th>角色ID</th>
                                 <th>用户名称</th>
                                 <th>登录名称</th>
-                                <th>已有角色</th>
+                                <th>角色</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -63,6 +64,47 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
+</div>
+<div class="modal fade" id="dialog_user_role" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">角色设置</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <input type="hidden" id="e_id"/>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <label id="e_user_name" class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputRole" class="col-sm-2 control-label">现在角色</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="e_role" placeholder="Email" type="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">选择角色</label>
+                            <div class="col-sm-10">
+                                <select id="e_roles" class="selectpicker form-control" data-live-search="true" multiple data-selected-text-format="count" data-style="btn-primary" data-width="auto" data-actions-box="true" data-header="请选择权限">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
 <% include partials/footer %>
 <script src="/javascripts/service/user_role_manage.js"></script>

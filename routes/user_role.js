@@ -41,18 +41,22 @@ router.get('/load', async(req, res, next) => {
         sql = "select b.user_id,a.user_name,a.name,b.role_id,c.role_name,c.description from bs_user a left join bs_user_role b on a.id=b.user_id left join bs_role c on b.role_id=c.role_id where a.id=?";
         var userRoles = await mysql.querySync(sql, user_id);
         if (userRoles.length > 0) {
-            var role_name = "";
+            var role_name = "", role_id = "";
             for (var j = 0; j < userRoles.length; j++) {
                 var userRole = userRoles[j];
                 if(j == 0) {
                     role_name = userRole['role_name'];
+                    role_id = userRole['role_id'];
                 } else {
                     role_name = role_name + ', ' + userRole['role_name'];
+                    role_id = role_id + ',' + userRole['role_id'];
                 }
             }
             obj['role_name'] = role_name;
+            obj['role_id'] = role_id;
         } else {
             obj['role_name'] = "";
+            obj['role_id'] = "";
         }
 
         obj['is'] = obj['id'] + "_";
@@ -61,5 +65,19 @@ router.get('/load', async(req, res, next) => {
     backResult.data = data;
     res.status(200).json(backResult);
 });
-
+router.get('/getRole', async(req, res, next) => {
+    var result = {
+        error: 0,
+        data: []
+    };
+    try {
+        var sql = "select role_id,role_name from bs_role";
+        var data = await mysql.querySync(sql);
+        result['data'] = data;
+        res.status(200).json(result);
+    } catch (e) {
+        result.error = 1;
+        res.status(500).json(result);
+    }
+});
 module.exports = router;

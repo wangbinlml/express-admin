@@ -84,6 +84,5 @@ router.post("/", async(req, res, next) => {
     } else {
         res.status(200).json({error: 1, msg: "用户名或者密码错误"});
     }
-    console.log(user)
 });
 module.exports = router;
