@@ -8,12 +8,14 @@ var log = require('../core/logger').getLogger("system");
 var app = require('../app');
 var debug = require('debug')('express-admin:server');
 var http = require('http');
+var commonUtil = require('../core/util/commonUtil');
+var systemConfig = require(commonUtil.getConfigPath() + "/system_config");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || systemConfig.application_port || '3000');
 app.set('port', port);
 
 /**

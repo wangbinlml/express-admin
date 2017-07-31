@@ -33,16 +33,16 @@ $(function () {
                 } else {
                     var tempAjax = "";
                     var data = result.data;
-                    $.each(data,function(i,n){
-                        tempAjax += "<option value='"+n.role_id+"'>"+n.role_name+"</option>";
+                    $.each(data, function (i, n) {
+                        tempAjax += "<option value='" + n.role_id + "'>" + n.role_name + "</option>";
                     });
                     $("#e_roles").empty();
                     $("#e_roles").append(tempAjax);
                     //更新内容刷新到相应的位置
                     $('#e_roles').selectpicker('render');
                     $('#e_roles').selectpicker('refresh');
-                    if(role_id!="") {
-                        $('#e_roles').selectpicker('val', role_id.split(","));
+                    if (role_id != "") {
+                        $('#e_roles').selectpicker('val', role_id.indexOf(",") != -1 ? role_id.split(",") : role_id);
                     }
                 }
             }
