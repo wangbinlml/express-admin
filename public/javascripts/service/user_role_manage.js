@@ -1,13 +1,22 @@
 $(function () {
+    function getTreeViewCheckedData(target) {
+        var checkedData = [];
+        target.find('ol.bonsai input:checkbox:checked').each(function () {
+                checkedData.push($(this).val())
+            }
+        );
+        return checkedData;
+    }
     $("#e_roles").selectpicker();
     $('#dialog_user_role').on('show.bs.modal', function (event) {
+        $("#e_roles").empty();
         var modal = $(this);
         var button = $(event.relatedTarget);// Button that triggered the modal
         var data = button.data('whatever'); // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         //var data = JSON.parse(recipient);
-        var role_id = data.role_id;
+        var role_id = data.role_id + "";
         $.ajax({
             type: "get",
             url: "/user_role/getRole",
@@ -50,6 +59,10 @@ $(function () {
         modal.find('.modal-body input#e_id').val(data.id);
         modal.find('.modal-body label#e_user_name').html(data.name);
         modal.find('.modal-body input#e_role').val(data.role_name);
+        modal.find('.modal-footer #saveUserRole').click(function () {
+            var val = $("#e_roles").val();
+            console.log(val)
+        });
     });
     $('#users').DataTable({
         'bProcessing': true,
