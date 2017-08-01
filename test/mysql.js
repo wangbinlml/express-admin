@@ -5,8 +5,8 @@ const sql2 = 'insert into bs_role(role_name,description) value("c","c")';
     const conn = await mysql.getConnectionSync();
     try {
         await mysql.beginTransactionSync(conn);
-        await mysql.querySync2(conn, sql1, "", true);
-        await mysql.querySync2(conn, sql2, "", true);
+        await mysql.querySync2(conn, sql1, "");
+        await mysql.querySync2(conn, sql2, "");
         mysql.commitSync(conn);
         console.log('==============finish=====')
     } catch (e) {

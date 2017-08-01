@@ -108,10 +108,9 @@ module.exports.beginTransactionSync = (connection) => {
  * 带事务
  * @param sql
  * @param values
- * @param transaction
  * @returns {Promise}
  */
-module.exports.querySync2 = (connection, sql, values, transaction) => {
+module.exports.querySync2 = (connection, sql, values) => {
     return new Promise((resolve, reject) => {
         connection.query(sql, values, (error, rows) => {
             if (error)
