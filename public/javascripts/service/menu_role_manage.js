@@ -16,19 +16,27 @@ $(function () {
             var temp = menuData[i];
             var liParent = $("<li class='expanded'></li>");
             liParent.attr("data-value", temp.menu_id);
-            liParent.html(" "+temp.menu_name);
+            liParent.html(" " + temp.menu_name);
             var streams = temp.menu_child;
             var ol = $("<ol></ol>");
             for (var j = 0; j < streams.length; j++) {
                 var li = $("<li></li>");
                 li.attr("data-value", streams[j].menu_id);
-                li.html(" "+streams[j].menu_name);
+                li.html(" " + streams[j].menu_name);
                 ol.append(li);
             }
             liParent.append(ol);
             targetTreeView.append(liParent);
         }
+        var menuId = data.menuId;
+        $("#menu-role-checkboxes").find("li[data-value]").each(function () {
+            var d_value = $(this).attr("data-value");
+            if (menuId[d_value]) {
+                $(this).attr("data-checked", "1");
+            }
+        });
     }
+
     /**
      * 获得tree view 选中的值
      * var target = $('#shareSetting');
@@ -41,6 +49,7 @@ $(function () {
         );
         return checkedData;
     }
+
     $('#dialog_menu_role').on('show.bs.modal', function (event) {
         var targetTreeView = $("#menu-role-checkboxes");
         var modal = $(this);
@@ -52,7 +61,7 @@ $(function () {
         var role_id = data.role_id;
         $.ajax({
             type: "get",
-            url: "/menu_role/get_menu?role_id="+role_id,
+            url: "/menu_role/get_menu?role_id=" + role_id,
             asyc: false,
             error: function (error) {
                 new Noty({
@@ -83,7 +92,7 @@ $(function () {
         modal.find('.modal-body label#e_role_name').html(data.role_name);
         modal.find('.modal-footer #saveMenuRole').click(function () {
             var check = getTreeViewCheckedData(targetTreeView);
-            console.log(check);
+            console.log($("#e-menu-role-form").serialize());
         });
     });
     $('#roles').DataTable({
@@ -91,7 +100,7 @@ $(function () {
         'lengthChange': true,
         'searching': true,
         'info': true,
-        'ajax':'/menu_role/load',
+        'ajax': '/menu_role/load',
         'autoWidth': true,
         "ordering": false,
         "columns": [

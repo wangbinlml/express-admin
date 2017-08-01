@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/get_menu', async(req, res, next) => {
+router.get('/get_menu', async (req, res, next) => {
     var result = {
         error: 0,
         data: {
@@ -23,14 +23,18 @@ router.get('/get_menu', async(req, res, next) => {
         var role_id = req.query.role_id;
         var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=?";
         var menuId = await mysql.querySync(sql, role_id);
-        result['data']['menuId'] = menuId;
+        var ids = [];
+        for (var i = 0; i < menuId.length; i++) {
+            ids.push(menuId[i]['menu_id']);
+        }
+        result['data']['menuId'] = ids;
         res.status(200).json(result);
     } catch (e) {
         result.error = 1;
         res.status(500).json(result);
     }
 });
-router.get('/load', async(req, res, next) => {
+router.get('/load', async (req, res, next) => {
     var sqlcount = "select count(*) count from bs_role";
     var sql = "select * from bs_role";
 
