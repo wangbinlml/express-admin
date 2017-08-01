@@ -59,10 +59,11 @@ $(function () {
         modal.find('.modal-body input#e_id').val(data.id);
         modal.find('.modal-body label#e_user_name').html(data.name);
         modal.find('.modal-body input#e_role').val(data.role_name);
-        modal.find('.modal-footer #saveUserRole').click(function () {
-            var val = $("#e_roles").val();
-            console.log(val)
-        });
+
+    });
+    $('#dialog_user_role').find('.modal-footer #saveUserRole').on("click",function () {
+        var val = $("#e_roles").val();
+        console.log(val)
     });
     $('#users').DataTable({
         'bProcessing': true,

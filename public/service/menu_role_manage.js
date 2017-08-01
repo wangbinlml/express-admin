@@ -90,10 +90,10 @@ $(function () {
         });
         modal.find('.modal-body input#e_id').val(data.role_id);
         modal.find('.modal-body label#e_role_name').html(data.role_name);
-        modal.find('.modal-footer #saveMenuRole').click(function () {
-            var check = getTreeViewCheckedData(targetTreeView);
-            console.log($("#e-menu-role-form").serialize());
-        });
+    });
+    $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
+        var check = getTreeViewCheckedData(targetTreeView);
+        console.log($("#e-menu-role-form").serialize());
     });
     $('#roles').DataTable({
         'paging': true,

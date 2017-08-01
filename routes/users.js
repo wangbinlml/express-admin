@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('../core/mysql');
 const router = express.Router();
+const log = require('../core/logger').getLogger("system");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -12,42 +13,58 @@ router.get('/', (req, res, next) => {
     });
 });
 router.get('/load', async(req, res, next) => {
-    var sqlcount = "select count(*) count from bs_user";
-    var sql = "select * from bs_user";
+    try {
+        var sqlcount = "select count(*) count from bs_user";
+        var sql = "select * from bs_user";
 
-    var start = req.query.start;
-    var length = req.query.length;
-    var draw = req.query.draw;
-    if (!start || !draw || !length) {
-        res.status(401).json("invoke error!");
-        return;
-    }
+        var s_name = req.query.s_name;
+        var s_user_name = req.query.s_user_name;
 
-    start = parseInt(start) || 0;
-    length = parseInt(length) || 0;
-    draw = parseInt(draw) || 0;
-    var memuCount = await mysql.querySync(sqlcount);
-    sql = sql + " ORDER BY id DESC limit " + start + "," + length;
-    var result = await mysql.querySync(sql);
-    var backResult = {
-        draw: draw,
-        recordsTotal: memuCount['0']['count'],
-        recordsFiltered: memuCount['0']['count'],
-        data: []
-    };
-    for (var i in result) {
-        backResult.data.push({
-            id: result[i].id,
-            is: result[i].id + "_",
-            user_name: result[i].user_name,
-            name: result[i].name,
-            mail: result[i].mail,
-            phone: result[i].tel,
-            sex: result[i].sex == "0" ? "男" : "女",
-            birthday: result[i].birthday
-        });
+        if (s_name) {
+            sqlcount = sqlcount + " where name like '%" + s_name.trim() + "%'";
+            sql = sql + " where name like '%" + s_name.trim() + "%'";
+        }
+        if (s_user_name) {
+            sqlcount = sqlcount + " where user_name like '%" + s_user_name.trim() + "%'";
+            sql = sql + " where user_name like '%" + s_user_name.trim() + "%'";
+        }
+        var start = req.query.start;
+        var length = req.query.length;
+        var draw = req.query.draw;
+        if (!start || !draw || !length) {
+            res.status(401).json("invoke error!");
+            return;
+        }
+
+        start = parseInt(start) || 0;
+        length = parseInt(length) || 0;
+        draw = parseInt(draw) || 0;
+        var memuCount = await mysql.querySync(sqlcount);
+        sql = sql + " ORDER BY id DESC limit " + start + "," + length;
+        var result = await mysql.querySync(sql);
+        var backResult = {
+            draw: draw,
+            recordsTotal: memuCount['0']['count'],
+            recordsFiltered: memuCount['0']['count'],
+            data: []
+        };
+        for (var i in result) {
+            backResult.data.push({
+                id: result[i].id,
+                is: result[i].id + "_",
+                user_name: result[i].user_name,
+                name: result[i].name,
+                mail: result[i].mail,
+                phone: result[i].tel,
+                sex: result[i].sex == "0" ? "男" : "女",
+                birthday: result[i].birthday
+            });
+        }
+        res.status(200).json(backResult);
+    } catch (e) {
+        log.error("e");
+        res.status(500).json({error:1, msg:'内部错误'});
     }
-    res.status(200).json(backResult);
 });
 
 module.exports = router;

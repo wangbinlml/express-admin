@@ -12,7 +12,12 @@ $(function () {
             {"data": "role_id"},
             {"data": "role_name"},
             {"data": "description"},
-            {"data": "is"}
+            {
+                "data": "is",
+                render: function (data, type, row, meta) {
+                    return '<button type="button" class="btn btn-info" data-toggle="modal" data-target="#dialog_user_edit" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
+                }
+            }
         ],
         "language": {
             "emptyTable": "没有结果可以显示",
