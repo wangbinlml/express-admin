@@ -20,21 +20,6 @@ module.exports.getConnection = (cb) => {
         cb(err, connection);
     });
 };
-module.exports.querySync = (sql, values) => {
-    return new Promise((resolve, reject) => {
-        pool.getConnection((err, connection) => {
-            if (err) {
-                reject(err);
-            } else {
-                connection.query(sql, values, (error, rows) => {
-                    if (error) reject(error);
-                    resolve(rows);
-                });
-                connection.release();
-            }
-        });
-    });
-};
 module.exports.query = (sql, values, cb) => {
     pool.getConnection((err, connection) => {
         if (err) {
@@ -47,7 +32,31 @@ module.exports.query = (sql, values, cb) => {
         }
     });
 };
-
+module.exports.beginTransaction = (connection, cb) => {
+    connection.beginTransaction(function (err) {
+        if (err) {
+            throw err;
+        }
+        cb(null, connection);
+    });
+};
+module.exports.rollback = (connection, cb) => {
+    connection.rollback(function () {
+        cb && cb();
+    });
+};
+module.exports.commit = (connection, cb) => {
+    connection.commit(function (err) {
+        if (err) {
+            connection.rollback(function () {
+                cb && cb(err);
+                throw err;
+            });
+        }
+        connection.release();
+        cb && cb();
+    });
+};
 //检查是否链接失败
 this.getConnection((err, connection) => {
     if (err) throw err;
@@ -56,3 +65,84 @@ this.getConnection((err, connection) => {
         connection.release();
     }
 });
+module.exports.querySync = (sql, values) => {
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, connection) => {
+            if (err) {
+                reject(err);
+            } else {
+                connection.query(sql, values, (error, rows) => {
+                    if (error)
+                        reject(error);
+                    else
+                        resolve(rows);
+                });
+                connection.release();
+            }
+        });
+    });
+};
+module.exports.getConnectionSync = () => {
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, connection) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(connection);
+            }
+        });
+    });
+};
+module.exports.beginTransactionSync = (connection) => {
+    return new Promise((resolve, reject) => {
+        connection.beginTransaction(function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(connection);
+            }
+        });
+    });
+};
+/**
+ * 带事务
+ * @param sql
+ * @param values
+ * @param transaction
+ * @returns {Promise}
+ */
+module.exports.querySync2 = (connection, sql, values, transaction) => {
+    return new Promise((resolve, reject) => {
+        connection.query(sql, values, (error, rows) => {
+            if (error)
+                reject(error);
+            else
+                resolve(rows);
+        });
+    });
+};
+module.exports.rollbackSync = (connection) => {
+    return new Promise((resolve, reject) => {
+        connection.rollback(function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+        connection.release();
+    });
+};
+module.exports.commitSync = (connection) => {
+    return new Promise((resolve, reject) => {
+        connection.commit(function (err) {
+            if (err) {
+                connection.rollback(function () {
+                    reject(err);
+                });
+            }
+            connection.release();
+            resolve();
+        });
+    });
+};
