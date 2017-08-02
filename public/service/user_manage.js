@@ -1,6 +1,7 @@
 $(function () {
     var datatable = $('#users').DataTable({
         'bProcessing': true,
+        'display': true,
         'paging': true,
         'lengthChange': true,
         'searching': false,
@@ -31,7 +32,7 @@ $(function () {
                     if (sex == "男") {
                         row.sex = 1;
                     }
-                    return '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
+                    return '<a class="" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</a>'
                 }
             }
         ],
@@ -67,14 +68,27 @@ $(function () {
     $("#user-search").on("click", function () {
         datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
     });
+
+    $("#user_refresh").on("click", function () {
+        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
+    });
+
     //删除
     $("#user-remove").on("click", function () {
         var ids = [];
-        $(".datatable :checked").each(function() {
+        $(".datatable :checked").each(function () {
             var id = $(this).val();
             if (id === "all")    return true;
             ids.push(id);
         });
+        if(ids.length==0){
+            new Noty({
+                type: 'warning',
+                layout: 'topCenter',
+                text: '至少要选择一条记录',
+                timeout: '2000'
+            }).show();
+        }
         console.log(ids.toString())
     });
 
