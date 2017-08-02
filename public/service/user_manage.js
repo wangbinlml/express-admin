@@ -99,19 +99,27 @@ $(function () {
         var data = button.data('whatever'); // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        modal.find('.modal-body input#e_id').val(data.id);
-        modal.find('.modal-body input#e_user_name').val(data.user_name);
-        modal.find('.modal-body input#e_name').val(data.name);
-        modal.find('.modal-body input#e_birthday').val(data.birthday);
-        modal.find('.modal-body input#e_phone').val(data.phone);
-        modal.find('.modal-body input#e_mail').val(data.mail);
-        modal.find('.modal-body select#e_sex').val(data.sex);
+        if(data) {
+            modal.find('.modal-body label#user_password_desc').show();
+            modal.find('.modal-body input#e_id').val(data.id);
+            modal.find('.modal-body input#e_user_name').val(data.user_name);
+            modal.find('.modal-body input#e_name').val(data.name);
+            modal.find('.modal-body input#e_birthday').val(data.birthday);
+            modal.find('.modal-body input#e_phone').val(data.phone);
+            modal.find('.modal-body input#e_mail').val(data.mail);
+            modal.find('.modal-body select#e_sex').val(data.sex);
+        } else {
+            modal.find('.modal-body label#user_password_desc').hide();
+            modal.find('.modal-body form input').val("");
+            modal.find('.modal-body form select').val("-1");
+        }
+        modal.find('.modal-body input#e_password').val("");
     });
     $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
         console.log($("#e-menu-role-form").serialize());
         $.ajax({
             type: "get",
-            url: "/users/update",
+            url: "/users/save",
             asyc: false,
             data: $("#e-menu-role-form").serialize(),
             error: function (error) {

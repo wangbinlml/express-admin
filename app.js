@@ -9,6 +9,7 @@ var systemConfig = require(commonUtil.getConfigPath() + "/system_config");
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var redisClient = require("./core/util/RedisUtils");
+var menu_auth = require("./core/menu_auth");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -46,8 +47,17 @@ app.use(session({
 }));
 
 app.use(function (req, res, next) {
-    if (auth(req)) {
+    //登录
+    if (is_login(req)) {
         res.render("login", {msg: '您未登录或登录已超时！'});
+        return;
+    } else if(menu_auth.check(req) == false){
+        //授权
+        res.status(401);
+        res.render('401', {
+            message: "没有权限访问该页面",
+            error: {}
+        });
         return;
     }
     next();
@@ -94,7 +104,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-function auth(req) {
+function is_login(req) {
     if (req.url.indexOf("login") == -1
         && !req.session.user) {
         return true;

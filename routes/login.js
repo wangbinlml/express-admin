@@ -73,6 +73,7 @@ router.post("/", async(req, res, next) => {
         }
         req.session.userRole = userRole;
         req.session.menus = menus;
+        req.session.menu_roles = menu_roles;
         req.session.menu_active = menu_active;
         if (is_remember) {
             res.cookie("login.username", username, {
