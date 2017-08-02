@@ -31,7 +31,7 @@ $(function () {
                     if (sex == "男") {
                         row.sex = 1;
                     }
-                    return '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
+                    return '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
                 }
             }
         ],

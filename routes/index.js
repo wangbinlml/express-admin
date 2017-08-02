@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
         user: req.session.user,
         menus: req.session.menus,
         menu_active: req.session.menu_active['/'],
-        title: 'Express'
+        title: '首页'
     });
 });
 
