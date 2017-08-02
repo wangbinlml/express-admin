@@ -27,6 +27,13 @@ router.get('/load', async(req, res, next) => {
     start = parseInt(start) || 0;
     length = parseInt(length) || 0;
     draw = parseInt(draw) || 0;
+
+    var search = req.query.search;
+    if(search) {
+        sqlcount = sqlcount + " where menu_name like '%" + search.value + "%'";
+        sql = sql + " where menu_name like '%" + search.value + "%'";
+    }
+
     var memuCount = await mysql.querySync(sqlcount);
     sql = sql + " ORDER BY parent_id ASC,menu_id ASC limit " + start + "," + length;
     var result = await mysql.querySync(sql);

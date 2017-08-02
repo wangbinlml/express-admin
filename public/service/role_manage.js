@@ -9,7 +9,12 @@ $(function () {
         'autoWidth': true,
         "ordering": false,
         "columns": [
-            {"data": "role_id"},
+            {
+                "data": "id",
+                "render": function (data, type, full, meta) {
+                    return '<input type="checkbox" name="role_id_' + data + '" value="' + data + '">';
+                }
+            },
             {"data": "role_name"},
             {"data": "description"},
             {
@@ -29,7 +34,7 @@ $(function () {
             "lengthMenu": "显示 _MENU_ 条",
             "loadingRecords": "加载中...",
             "processing": "处理中...",
-            "search": "搜索（任意字段）：",
+            "search": "搜索角色名称：",
             "zeroRecords": "没有匹配的数据",
             "paginate": {
                 "first": "第一页",

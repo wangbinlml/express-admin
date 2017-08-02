@@ -24,7 +24,14 @@ $(function () {
             {
                 "data": "is",
                 render: function (data, type, row, meta) {
-                    return '<button type="button" class="btn btn-info" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
+                    var sex = row.sex;
+                    if (sex == "女") {
+                        row.sex = 0;
+                    }
+                    if (sex == "男") {
+                        row.sex = 1;
+                    }
+                    return '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</button>'
                 }
             }
         ],
@@ -50,18 +57,25 @@ $(function () {
         "serverSide": true
     });
     //Date picker
-    $( "#birthday" ).datepicker();
+    $("#e_birthday").datetimepicker({
+        timepicker: false,
+        format: "Y-m-d",
+        maxDate: "+1970/01/01" // 只允许当天以前的日期
+    });
+
     //搜索
     $("#user-search").on("click", function () {
-        var s_user_name = $("#s_user_name").val();
-        var s_name = $("#s_name").val();
-        datatable.ajax.url('/users/load?s_user_name=' + s_user_name + '&s_name=' + s_name).load();
+        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
     });
     //删除
     $("#user-remove").on("click", function () {
-        var s_user_name = $("#s_user_name").val();
-        var s_name = $("#s_name").val();
-        datatable.ajax.url('/users/load?s_user_name=' + s_user_name + '&s_name=' + s_name).load();
+        var ids = [];
+        $(".datatable :checked").each(function() {
+            var id = $(this).val();
+            if (id === "all")    return true;
+            ids.push(id);
+        });
+        console.log(ids.toString())
     });
 
     //编辑
@@ -74,10 +88,18 @@ $(function () {
         modal.find('.modal-body input#e_id').val(data.id);
         modal.find('.modal-body input#e_user_name').val(data.user_name);
         modal.find('.modal-body input#e_name').val(data.name);
-        /*$.ajax({
+        modal.find('.modal-body input#e_birthday').val(data.birthday);
+        modal.find('.modal-body input#e_phone').val(data.phone);
+        modal.find('.modal-body input#e_mail').val(data.mail);
+        modal.find('.modal-body select#e_sex').val(data.sex);
+    });
+    $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
+        console.log($("#e-menu-role-form").serialize());
+        $.ajax({
             type: "get",
-            url: "/menu_role/get_menu?role_id=" + role_id,
+            url: "/users/update",
             asyc: false,
+            data: $("#e-menu-role-form").serialize(),
             error: function (error) {
                 new Noty({
                     type: 'error',
@@ -85,27 +107,20 @@ $(function () {
                     text: '内部错误，请稍后再试',
                     timeout: '5000'
                 }).show();
-                $('#dialog_user_role').modal('hide');
             },
             success: function (result) {
                 if (result.error) {
                     new Noty({
                         type: 'error',
                         layout: 'topCenter',
-                        text: result.msg || '获取菜单角色失败',
-                        timeout: '5000'
+                        text: result.msg || '保存用户失败',
+                        timeout: '2000'
                     }).show();
-                    $('#dialog_user_role').modal('hide');
                 } else {
-                    initTreeViewDom(result.data, targetTreeView);//根据数据完成tree view dom 的拼接
-                    //刷新bonsai插件(每次重新获得数据之后，再次刷新一下tree view 插件)
-                    targetTreeView.bonsai('update');
+                    datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
+                    $('#e-dialog-user').modal('hide');
                 }
             }
-        });*/
-    });
-    $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
-        var check = getTreeViewCheckedData(targetTreeView);
-        console.log($("#e-menu-role-form").serialize());
+        });
     });
 });

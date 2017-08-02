@@ -33,8 +33,10 @@
                                 <input type="text" id="s_user_name">
                             </div>
                             <div class="col-md-3 col-sm-4">
-                                <a class="btn btn- btn-sm" href="javascript:void(0)" id="user-search"><i class="glyphicon glyphicon-search"></i>
-                                    查询</a> <a class="btn btn-danger btn-sm" href="javascript:void(0)" id="user-remove"><i class="fa fa-remove icon-white"></i>
+                                <a class="btn btn-default btn-sm" href="javascript:void(0)" id="user-search"><i
+                                            class="glyphicon glyphicon-search"></i>
+                                    查询</a> <a class="btn btn-danger btn-sm" href="javascript:void(0)"
+                                              id="user-remove"><i class="fa fa-remove icon-white"></i>
                                     批量删除</a>
                             </div>
                         </div>
@@ -50,7 +52,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="users" class="table table-bordered table-hover">
+                        <table id="users" class="table datatable table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th><input value="all" type="checkbox"
@@ -103,37 +105,41 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">登录名</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_user_name" placeholder="User Name">
+                                <input type="text" class="form-control" id="e_user_name" name="e_user_name" placeholder="User Name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">用户名称</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_name" placeholder="Name">
+                                <input type="text" class="form-control" id="e_name" name="e_name" placeholder="Name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">性别</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_name" placeholder="Name">
+                                <select name="e_sex" id="e_sex">
+                                    <option value="-1">--请选择--</option>
+                                    <option value="1">男</option>
+                                    <option value="0">女</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">生日</label>
                             <div class="col-sm-10">
-                                <input type="text" id="birthday">
+                                <input type="text" name="e_birthday" id="e_birthday" readonly/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_name" placeholder="Name">
+                                <input type="text" class="form-control" name="e_phone" id="e_phone" placeholder="Phone">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">邮箱</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_name" placeholder="Name">
+                                <input type="text" class="form-control" id="e_mail" name="e_mail" placeholder="Email">
                             </div>
                         </div>
                     </div>

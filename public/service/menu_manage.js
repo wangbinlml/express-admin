@@ -125,7 +125,12 @@ $(function () {
         'autoWidth': true,
         "ordering": false,
         "columns": [
-            {"data": "id"},
+            {
+                "data": "id",
+                "render": function (data, type, full, meta) {
+                    return '<input type="checkbox" name="menu_id_' + data + '" value="' + data + '">';
+                }
+            },
             {"data": "menu_name"},
             {"data": "menu_url"},
             {"data": "menu_icon"},
@@ -146,7 +151,7 @@ $(function () {
             "lengthMenu": "显示 _MENU_ 条",
             "loadingRecords": "加载中...",
             "processing": "处理中...",
-            "search": "搜索（任意字段）：",
+            "search": "搜索菜单名称：",
             "zeroRecords": "没有匹配的数据",
             "paginate": {
                 "first": "第一页",
