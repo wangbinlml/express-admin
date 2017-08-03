@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
         title: '用户管理'
     });
 });
-router.get('/load', async (req, res, next) => {
+router.get('/load', async(req, res, next) => {
     try {
         var sqlcount = "select count(*) count from bs_user";
         var sql = "select * from bs_user";
@@ -69,7 +69,7 @@ router.get('/load', async (req, res, next) => {
     }
 });
 
-router.get('/save', async (req, res, next) => {
+router.get('/save', async(req, res, next) => {
     var result = {
         error: 0,
         msg: ""
@@ -86,14 +86,16 @@ router.get('/save', async (req, res, next) => {
         var e_password = req.query.e_password;
         if (e_user_name == "" || e_user_name.trim() == "") {
             result.msg = "登录名不能为空";
-        }
-        else if (e_name == "" || e_name.trim() == "") {
+        } else if (e_name == "" || e_name.trim() == "") {
             result.msg = "用户名称不能为空";
-        }
-        else if (e_phone == "" || e_phone.trim() == "") {
+        } else if (e_phone == "" || e_phone.trim() == "") {
             result.msg = "手机号不能为空";
-        } else if (e_id == "" && (e_password == "" || e_password.trim() == "")) {
+        }  else if (e_id == "" && (e_password == "" || e_password.trim() == "")) {
             result.msg = "密码不能为空";
+        }else if (e_birthday == "" || e_birthday.trim() == "") {
+            result.msg = "生日不能为空";
+        } else if (e_mail == "" || e_mail.trim() == "") {
+            result.msg = "邮箱不能为空";
         }
         if (result.msg != "") {
             result.error = 1;
@@ -131,7 +133,7 @@ router.get('/save', async (req, res, next) => {
         res.status(200).json(result);
     }
 });
-router.delete('/delete', async (req, res, next) => {
+router.delete('/delete', async(req, res, next) => {
     var result = {
         error: 0,
         msg: ""

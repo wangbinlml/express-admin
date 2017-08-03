@@ -20,7 +20,19 @@
             <div class="col-xs-12">
                 <div class="box" style="margin-bottom:auto">
                     <div class="box-header with-border">
-                        <h3 class="box-title">角色列表</h3>
+                        <b>工具栏： </b>
+                        <caption>
+                            <button type="button" class="btn btn-default" id="role_refresh"><i class="fa fa-refresh icon-white"></i> 刷新
+                            </button>
+                            <button type="button" class="btn btn-success" id="role_add" data-toggle="modal" data-target="#e-dialog-role" data-whatever=""><i class="glyphicon glyphicon-edit icon-white"></i> 新增
+                            </button>
+                            <button type="button" class="btn btn-info" id="role_edit" data-toggle="modal" id="user-edit"><i class="fa fa-edit icon-white"></i> 编辑
+                            </button>
+                            <button type="button" class="btn btn-danger" id="role_batch_remove"><i class="fa fa-remove icon-white"></i> 删除
+                            </button>
+                            <button type="button" class="btn btn-info" id="role_find" onclick="optionUserData(this);"><i class="glyphicon glyphicon-zoom-in icon-white"></i> 详情
+                            </button>
+                        </caption>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -48,6 +60,40 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
+</div>
+<div class="modal fade" id="e-dialog-role" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">角色修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="e-role-form">
+                    <div class="box-body">
+                        <input type="hidden" data-name="e_id" name="e_id" id="e_id"/>
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">角色名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="e_role_name" id="e_role_name" placeholder="请输入角色名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">角色描述</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="e_description" name="e_description" placeholder="请输入角色描述">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveRole">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
 <% include partials/footer %>
 <script src="/service/role_manage.js"></script>
