@@ -87,11 +87,11 @@ router.get('/save', async(req, res, next) => {
                     ret = await mysql.querySync(sql, [e_role_name, e_description]);
                 }
             }
-            log.info("role user ret: ", ret);
+            log.info("save role ret: ", ret);
         }
         res.status(200).json(result);
     } catch (e) {
-        log.error("role user ret:", e);
+        log.error("save role ret:", e);
         result.error = 1;
         result.msg = "保存失败，请联系管理员";
         res.status(200).json(result);
@@ -106,9 +106,8 @@ router.delete('/delete', async(req, res, next) => {
     var conn = await mysql.getConnectionSync();
     await mysql.beginTransactionSync(conn);
     try {
-        log.info("delete user params: ", req.body);
+        log.info("delete role params: ", req.body);
         var ids = req.body.ids;
-        var user = req.session.user;
         if (ids && ids.trim() != "") {
             ids = ids.split(",");
             var sql = 'delete from bs_menu_role where role_id in (';

@@ -137,14 +137,14 @@ var deleteRoleData = function (ids) {
                 new Noty({
                     type: 'error',
                     layout: 'topCenter',
-                    text: result.msg || '删除用户失败',
+                    text: result.msg || '删除角色失败',
                     timeout: '2000'
                 }).show();
             } else {
                 new Noty({
                     type: 'success',
                     layout: 'topCenter',
-                    text: result.msg || '删除用户成功',
+                    text: result.msg || '删除角色成功',
                     timeout: '2000'
                 }).show();
                 datatables.ajax.url('/roles/load').load();

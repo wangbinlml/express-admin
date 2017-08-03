@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('../core/mysql');
 const router = express.Router();
+const log = require('../core/logger').getLogger("system");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -13,6 +14,12 @@ router.get('/', (req, res, next) => {
     });
 });
 router.get('/load', async(req, res, next) => {
+    var menus = req.session.menus;
+    var parentMenu = {};
+    for (var i = 0; i < menus.length; i++) {
+        var menu = menus[i];
+        parentMenu[menu['menu_id']] = menu['menu_name'];
+    }
     var sqlcount = "select count(*) count from bs_menu";
     var sql = "select * from bs_menu";
 
@@ -29,7 +36,7 @@ router.get('/load', async(req, res, next) => {
     draw = parseInt(draw) || 0;
 
     var search = req.query.search;
-    if(search) {
+    if (search) {
         sqlcount = sqlcount + " where menu_name like '%" + search.value + "%'";
         sql = sql + " where menu_name like '%" + search.value + "%'";
     }
@@ -47,12 +54,117 @@ router.get('/load', async(req, res, next) => {
         backResult.data.push({
             id: result[i].menu_id,
             is: result[i].menu_id + "_",
+            parent_id: result[i].parent_id,
             menu_name: result[i].menu_name,
+            parent_menu_name: parentMenu[result[i].parent_id] || "无",
             menu_url: result[i].menu_url,
-            menu_icon: '<span class="glyphicon '+result[i].menu_icon+'"> ('+result[i].menu_icon+')'
+            menu_icon: result[i].menu_icon
         });
     }
     res.status(200).json(backResult);
 });
 
+router.get('/getParentMenu', async(req, res, next) => {
+    try {
+        var sql = "select * from bs_menu where parent_id=0";
+        var result = await mysql.querySync(sql);
+        res.status(200).json({
+            error: 0,
+            msg: "",
+            data: result
+        });
+    } catch (e) {
+        log.error("get parent menu: ", e);
+        res.status(500).json({
+            error: 0,
+            msg: "获取父级菜单失败，请联系管理"
+        });
+    }
+});
+router.get('/save', async(req, res, next) => {
+    var result = {
+        error: 0,
+        msg: ""
+    };
+    try {
+        log.info("save menu params: ", req.query);
+        var e_id = req.query.e_id;
+        var e_menu_name = req.query.e_menu_name;
+        var e_parent_id = req.query.e_parent_id;
+        var e_menu_url = req.query.e_menu_url;
+        var e_menu_icon = req.query.e_menu_icon;
+        if (e_menu_name == "" || e_menu_name.trim() == "") {
+            result.msg = "角色不能为空";
+        }
+        if (result.msg != "") {
+            result.error = 1;
+        } else {
+            var ret, sql;
+            if (e_id) {
+                sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=? where menu_id=?";
+                var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, e_id];
+                ret = await mysql.querySync(sql, params);
+            } else {
+                sql = "select * from bs_menu where menu_name=?";
+                var users = await mysql.querySync(sql, e_menu_name);
+                if (users.length > 0) {
+                    result.error = 1;
+                    result.msg = "菜单名已经存在！";
+                } else {
+                    sql = "insert bs_menu(menu_name, parent_id,menu_url,menu_icon) values (?,?,?,?)";
+                    ret = await mysql.querySync(sql, [e_menu_name, e_parent_id, e_menu_url, e_menu_icon]);
+                }
+            }
+            log.info("save menu ret: ", ret);
+        }
+        res.status(200).json(result);
+    } catch (e) {
+        log.error("save menu ret:", e);
+        result.error = 1;
+        result.msg = "保存失败，请联系管理员";
+        res.status(200).json(result);
+    }
+});
+router.delete('/delete', async(req, res, next) => {
+    var result = {
+        error: 0,
+        msg: ""
+    };
+
+    var conn = await mysql.getConnectionSync();
+    await mysql.beginTransactionSync(conn);
+    try {
+        log.info("delete menu params: ", req.body);
+        var ids = req.body.ids;
+        if (ids && ids.trim() != "") {
+            ids = ids.split(",");
+            var sql = 'delete from bs_menu_role where menu_id in (';
+            var sql3 = 'delete from bs_menu where menu_id in (';
+            for (var i = 0; i < ids.length; i++) {
+                if (i == 0) {
+                    sql = sql + ids[i];
+                    sql3 = sql3 + ids[i];
+                } else {
+                    sql = sql + "," + ids[i];
+                    sql3 = sql3 + "," + ids[i];
+                }
+            }
+            sql = sql + ")";
+            sql3 = sql3 + ")";
+            await mysql.querySync2(conn, sql);
+            await mysql.querySync2(conn, sql3);
+            await mysql.commitSync(conn);
+        } else {
+            result.error = 1;
+            result.msg = "删除失败，必须选择一项";
+            await mysql.rollbackSync(conn);
+        }
+    } catch (e) {
+        log.error("delete menu ret:", e);
+        result.error = 1;
+        result.msg = "删除失败，请联系管理员";
+        await mysql.rollbackSync(conn);
+    }
+    res.status(200).json(result);
+});
 module.exports = router;
