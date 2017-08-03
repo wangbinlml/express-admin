@@ -30,7 +30,7 @@ router.post("/", async(req, res, next) => {
     if (users.length > 0) {
         var user = users[0];
         req.session.user = user;
-        var sql = "select a.user_id,b.role_id,b.role_name,b.description,d.menu_id,d.parent_id,d.menu_name,d.menu_url,d.menu_icon from bs_user_role a LEFT JOIN bs_role b ON a.role_id =b.role_id LEFT JOIN bs_menu_role c ON b.role_id = c.role_id LEFT JOIN bs_menu d ON c.menu_id = d.menu_id where a.user_id=? ORDER BY d.parent_id ASC,d.menu_id ASC";
+        var sql = "select a.user_id,b.role_id,b.role_name,b.description,d.menu_id,d.parent_id,d.menu_name,d.menu_url,d.menu_icon from bs_user_role a LEFT JOIN bs_role b ON a.role_id =b.role_id LEFT JOIN bs_menu_role c ON b.role_id = c.role_id LEFT JOIN bs_menu d ON c.menu_id = d.menu_id where a.user_id=? GROUP BY d.menu_id ORDER BY d.parent_id ASC,d.menu_id ASC";
         var menu_roles = await mysql.querySync(sql, user['id']);
         var menus = [];
         var userRole = [];

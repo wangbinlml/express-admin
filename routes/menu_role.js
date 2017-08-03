@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('../core/mysql');
+const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 
 /* GET users listing. */
@@ -68,5 +69,36 @@ router.get('/load', async (req, res, next) => {
     }
     res.status(200).json(backResult);
 });
-
+router.post('/setMenu', async (req, res, next) => {
+    var result = {
+        error: 0,
+        msg: "",
+        data: []
+    };
+    var e_id = req.body.e_id;
+    var e_menus = req.body.e_menus;
+    if (e_id && e_id != "" && e_id != 0) {
+        var conn = await mysql.getConnectionSync();
+        await mysql.beginTransactionSync(conn);
+        try {
+            var sql = "delete from bs_menu_role where role_id = ?";
+            var sql2 = "insert into bs_menu_role(role_id, menu_id) values (?,?)";
+            await mysql.querySync2(conn, sql, e_id);
+            for (var i = 0; i < e_menus.length; i++) {
+                await mysql.querySync2(conn, sql2, [e_id, e_menus[i]]);
+            }
+            await mysql.commitSync(conn);
+            res.status(200).json(result);
+        } catch (e) {
+            mysql.rollbackSync(conn);
+            log.error("menu_role set menu: ", e);
+            result.error = 1;
+            res.status(500).json(result);
+        }
+    } else {
+        result.error = 1;
+        result.msg = "无效角色";
+        res.status(200).json(result);
+    }
+});
 module.exports = router;

@@ -1,12 +1,4 @@
 $(function () {
-    function getTreeViewCheckedData(target) {
-        var checkedData = [];
-        target.find('ol.bonsai input:checkbox:checked').each(function () {
-                checkedData.push($(this).val())
-            }
-        );
-        return checkedData;
-    }
     $("#e_roles").selectpicker();
     $('#dialog_user_role').on('show.bs.modal', function (event) {
         $("#e_roles").empty();
@@ -59,13 +51,39 @@ $(function () {
         modal.find('.modal-body input#e_id').val(data.id);
         modal.find('.modal-body label#e_user_name').html(data.name);
         modal.find('.modal-body input#e_role').val(data.role_name);
-
     });
-    $('#dialog_user_role').find('.modal-footer #saveUserRole').on("click",function () {
-        var val = $("#e_roles").val();
-        console.log(val)
+    $('#dialog_user_role').find('.modal-footer #saveUserRole').on("click", function () {
+        var data = $("#e-user-role-form").serialize();
+        console.log(data)
+        $.ajax({
+            type: "post",
+            url: "/user_role/setRole",
+            data: data,
+            asyc: false,
+            error: function (error) {
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '内部错误，请稍后再试',
+                    timeout: '5000'
+                }).show();
+            },
+            success: function (result) {
+                if (result.error) {
+                    new Noty({
+                        type: 'error',
+                        layout: 'topCenter',
+                        text: result.msg || '设置角色失败',
+                        timeout: '5000'
+                    }).show();
+                } else {
+                    $('#dialog_user_role').modal('hide');
+                    datatable.ajax.url('/user_role/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
+                }
+            }
+        });
     });
-    $('#users').DataTable({
+    var datatable = $('#users').DataTable({
         'bProcessing': true,
         'paging': true,
         'lengthChange': true,
@@ -76,7 +94,6 @@ $(function () {
         "ordering": false,
         "columns": [
             {"data": "id"},
-            {"data": "role_id"},
             {"data": "name"},
             {"data": "user_name"},
             {"data": "role_name"},
@@ -107,5 +124,9 @@ $(function () {
             }
         },
         "serverSide": true
+    });
+    //搜索
+    $("#user-search").on("click", function () {
+        datatable.ajax.url('/user_role/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
     });
 });

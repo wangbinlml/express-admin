@@ -31,23 +31,10 @@ $(function () {
         var menuId = data.menuId;
         $("#menu-role-checkboxes").find("li[data-value]").each(function () {
             var d_value = $(this).attr("data-value");
-            if (menuId[d_value]) {
+            if ($.inArray(d_value, menuId)) {
                 $(this).attr("data-checked", "1");
             }
         });
-    }
-
-    /**
-     * 获得tree view 选中的值
-     * var target = $('#shareSetting');
-     */
-    function getTreeViewCheckedData(target) {
-        var checkedData = [];
-        target.find('ol.bonsai input:checkbox:checked').each(function () {
-                checkedData.push($(this).val())
-            }
-        );
-        return checkedData;
     }
 
     $('#dialog_menu_role').on('show.bs.modal', function (event) {
@@ -70,7 +57,7 @@ $(function () {
                     text: '内部错误，请稍后再试',
                     timeout: '5000'
                 }).show();
-                $('#dialog_user_role').modal('hide');
+                $('#dialog_menu_role').modal('hide');
             },
             success: function (result) {
                 if (result.error) {
@@ -80,9 +67,10 @@ $(function () {
                         text: result.msg || '获取菜单角色失败',
                         timeout: '5000'
                     }).show();
-                    $('#dialog_user_role').modal('hide');
+                    $('#dialog_menu_role').modal('hide');
                 } else {
-                    initTreeViewDom(result.data, targetTreeView);//根据数据完成tree view dom 的拼接
+                    //根据数据完成tree view dom 的拼接
+                    initTreeViewDom(result.data, targetTreeView);
                     //刷新bonsai插件(每次重新获得数据之后，再次刷新一下tree view 插件)
                     targetTreeView.bonsai('update');
                 }
@@ -92,10 +80,35 @@ $(function () {
         modal.find('.modal-body label#e_role_name').html(data.role_name);
     });
     $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
-        var check = getTreeViewCheckedData(targetTreeView);
-        console.log($("#e-menu-role-form").serialize());
+        $.ajax({
+            type: "post",
+            url: "/menu_role/setMenu",
+            data: $("#e-menu-role-form").serialize(),
+            asyc: false,
+            error: function (error) {
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '内部错误，请稍后再试',
+                    timeout: '5000'
+                }).show();
+            },
+            success: function (result) {
+                if (result.error) {
+                    new Noty({
+                        type: 'error',
+                        layout: 'topCenter',
+                        text: result.msg || '获取菜单角色失败',
+                        timeout: '5000'
+                    }).show();
+                } else {
+                    $('#dialog_menu_role').modal('hide');
+                    datatable.ajax.url('/menu_role/load').load();
+                }
+            }
+        });
     });
-    $('#roles').DataTable({
+    var datatable = $('#roles').DataTable({
         'paging': true,
         'lengthChange': true,
         'searching': true,

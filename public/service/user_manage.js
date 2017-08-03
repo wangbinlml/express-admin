@@ -32,7 +32,7 @@ $(function () {
                     if (sex == "男") {
                         row.sex = 1;
                     }
-                    return '<a class="" data-toggle="modal" id="user_id_'+row.id+'" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</a>'
+                    return '<a class="" data-toggle="modal" id="user_id_' + row.id + '" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a name="' + row.id + '" id="user_remove"><i class="fa fa-remove icon-white"></i> 删除</a>'
                 }
             }
         ],
@@ -63,15 +63,6 @@ $(function () {
         format: "Y-m-d",
         maxDate: "+1970/01/01" // 只允许当天以前的日期
     });
-
-    //搜索
-    $("#user-search").on("click", function () {
-        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
-    });
-
-    $("#user_refresh").on("click", function () {
-        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
-    });
     var getIds = function () {
         var ids = [];
         $(".datatable :checked").each(function () {
@@ -81,18 +72,13 @@ $(function () {
         });
         return ids;
     };
-    //删除
-    $("#user_remove").on("click", function () {
-        var ids = getIds();
-        if (ids.length == 0) {
-            new Noty({
-                type: 'warning',
-                layout: 'topCenter',
-                text: '至少要选择一条记录',
-                timeout: '2000'
-            }).show();
-        }
-        console.log(ids.toString())
+    //搜索
+    $("#user-search").on("click", function () {
+        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
+    });
+
+    $("#user_refresh").on("click", function () {
+        datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
     });
     var initForm = function (modal, data) {
         if (data) {
@@ -133,7 +119,7 @@ $(function () {
             return;
         }
         var id = ids[0];
-        var data = $("a#user_id_"+id).attr("data-whatever");
+        var data = $("a#user_id_" + id).attr("data-whatever");
         var modal = $('#e-dialog-user');
         initForm(modal, JSON.parse(data));
         $('#e-dialog-user').modal({
@@ -141,7 +127,6 @@ $(function () {
         });
     });
     $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
-        console.log($("#e-menu-role-form").serialize());
         $.ajax({
             type: "get",
             url: "/users/save",
@@ -164,10 +149,56 @@ $(function () {
                         timeout: '2000'
                     }).show();
                 } else {
-                    datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
                     $('#e-dialog-user').modal('hide');
+                    datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
                 }
             }
         });
+    });
+    var deleteUserData = function (ids) {
+        $.ajax({
+            type: "delete",
+            url: "/users/delete",
+            asyc: false,
+            data: {ids: ids},
+            error: function (error) {
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '内部错误，请稍后再试',
+                    timeout: '5000'
+                }).show();
+            },
+            success: function (result) {
+                if (result.error) {
+                    new Noty({
+                        type: 'error',
+                        layout: 'topCenter',
+                        text: result.msg || '删除用户失败',
+                        timeout: '2000'
+                    }).show();
+                } else {
+                    datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
+                }
+            }
+        });
+    };
+    //批量删除
+    $("#user_batch_remove").on("click", function () {
+        var ids = getIds();
+        if (ids.length == 0) {
+            new Noty({
+                type: 'warning',
+                layout: 'topCenter',
+                text: '至少要选择一条记录',
+                timeout: '2000'
+            }).show();
+            return;
+        }
+        deleteUserData(ids.join(","));
+    });
+    $("#user_remove").on("click", function () {
+        var id = $(this).attr("name");
+        alert(id);
     });
 });
