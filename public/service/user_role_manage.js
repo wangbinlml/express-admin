@@ -77,7 +77,7 @@ $(function () {
                     }).show();
                 } else {
                     new Noty({
-                        type: 'error',
+                        type: 'success',
                         layout: 'topCenter',
                         text: '设置角色成功',
                         timeout: '2000'

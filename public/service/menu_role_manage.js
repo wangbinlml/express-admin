@@ -105,7 +105,7 @@ $(function () {
                     }).show();
                 } else {
                     new Noty({
-                        type: 'alert',
+                        type: 'success',
                         layout: 'topCenter',
                         text: '菜单角色保存成功',
                         timeout: '5000'

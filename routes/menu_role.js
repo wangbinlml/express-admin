@@ -27,7 +27,7 @@ router.get('/get_menu', async (req, res, next) => {
         var menuId = await mysql.querySync(sql, role_id);
         var ids = [];
         for (var i = 0; i < menuId.length; i++) {
-            ids.push(menuId[i]['menu_id']+"");
+            ids.push(menuId[i]['menu_id'] + "");
         }
         result['data']['menuId'] = ids;
         res.status(200).json(result);
@@ -77,12 +77,12 @@ router.post('/setMenu', async (req, res, next) => {
         data: []
     };
     var e_id = req.body.e_id;
-    var e_menus = req.body.e_menus;
+    var e_menus = req.body.e_menus || [];
     if (e_id && e_id != "" && e_id != 0) {
         var conn = await mysql.getConnectionSync();
         await mysql.beginTransactionSync(conn);
         try {
-            if(!_.isArray(e_menus)) {
+            if (!_.isArray(e_menus)) {
                 e_menus = [e_menus]
             }
             var sql = "delete from bs_menu_role where role_id = ?";

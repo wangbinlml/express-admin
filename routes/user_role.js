@@ -101,12 +101,12 @@ router.post('/setRole', async (req, res, next) => {
         data: []
     };
     var e_id = req.body.e_id;
-    var e_roles = req.body.e_roles;
+    var e_roles = req.body.e_roles || [];
     if (e_id && e_id != "" && e_id != 0) {
         var conn = await mysql.getConnectionSync();
         await mysql.beginTransactionSync(conn);
         try {
-            if(!_.isArray(e_roles)) {
+            if (!_.isArray(e_roles)) {
                 e_roles = [e_roles]
             }
             var sql = "delete from bs_user_role where user_id = ?";
