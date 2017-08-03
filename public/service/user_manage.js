@@ -149,6 +149,12 @@ $(function () {
                         timeout: '2000'
                     }).show();
                 } else {
+                    new Noty({
+                        type: 'alert',
+                        layout: 'topCenter',
+                        text: result.msg || '保存成功',
+                        timeout: '2000'
+                    }).show();
                     $('#e-dialog-user').modal('hide');
                     datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
                 }

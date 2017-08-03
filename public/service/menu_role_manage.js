@@ -100,10 +100,16 @@ $(function () {
                     new Noty({
                         type: 'error',
                         layout: 'topCenter',
-                        text: result.msg || '获取菜单角色失败',
+                        text: result.msg || '菜单角色保存失败',
                         timeout: '5000'
                     }).show();
                 } else {
+                    new Noty({
+                        type: 'alert',
+                        layout: 'topCenter',
+                        text: '菜单角色保存成功',
+                        timeout: '5000'
+                    }).show();
                     $('#dialog_menu_role').modal('hide');
                     datatable.ajax.url('/menu_role/load').load();
                 }

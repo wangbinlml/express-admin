@@ -54,7 +54,6 @@ $(function () {
     });
     $('#dialog_user_role').find('.modal-footer #saveUserRole').on("click", function () {
         var data = $("#e-user-role-form").serialize();
-        console.log(data)
         $.ajax({
             type: "post",
             url: "/user_role/setRole",
@@ -77,6 +76,12 @@ $(function () {
                         timeout: '5000'
                     }).show();
                 } else {
+                    new Noty({
+                        type: 'error',
+                        layout: 'topCenter',
+                        text: '设置角色成功',
+                        timeout: '2000'
+                    }).show();
                     $('#dialog_user_role').modal('hide');
                     datatable.ajax.url('/user_role/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
                 }

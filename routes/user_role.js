@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('../core/mysql');
 const log = require('../core/logger').getLogger("system");
 const router = express.Router();
-
+const _ = require('lodash');
 /* GET users listing. */
 router.get('/', (req, res, next) => {
     res.render('user_role', {
@@ -106,6 +106,9 @@ router.post('/setRole', async (req, res, next) => {
         var conn = await mysql.getConnectionSync();
         await mysql.beginTransactionSync(conn);
         try {
+            if(!_.isArray(e_roles)) {
+                e_roles = [e_roles]
+            }
             var sql = "delete from bs_user_role where user_id = ?";
             var sql2 = "insert into bs_user_role(user_id,role_id) values (?,?)";
             await mysql.querySync2(conn, sql, e_id);
