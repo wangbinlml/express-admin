@@ -54,10 +54,9 @@
                             </button>
                             <button type="button" class="btn btn-success" id="user_add" data-toggle="modal" data-target="#e-dialog-user" data-whatever=""><i class="glyphicon glyphicon-edit icon-white"></i> 新增
                             </button>
-                            <button type="button" class="btn btn-info" id="user_edit" data-toggle="modal"
-                                    data-target="#myModal" onclick="optionUserData(this);"><i class="fa fa-edit icon-white"></i> 编辑
+                            <button type="button" class="btn btn-info" id="user_edit" data-toggle="modal" id="user-edit"><i class="fa fa-edit icon-white"></i> 编辑
                             </button>
-                            <button type="button" class="btn btn-danger" id="user-remove"><i class="fa fa-remove icon-white"></i> 删除
+                            <button type="button" class="btn btn-danger" id="user_remove"><i class="fa fa-remove icon-white"></i> 删除
                             </button>
                             <button type="button" class="btn btn-info" id="user_find" onclick="optionUserData(this);"><i class="glyphicon glyphicon-zoom-in icon-white"></i> 详情
                             </button>
@@ -132,7 +131,7 @@
                         <div class="form-group" id="form-password">
                             <label for="password" class="col-sm-2 control-label">用户密码</label>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" id="e_password" name="e_password" placeholder="请输入密码"><label id="user_password_desc">修改时为空,则不修改密码</label>
+                                <input type="password" class="form-control" id="e_password" name="e_password" placeholder="请输入密码"><label id="user_password_desc">不修改密码，该项可为空</label>
                             </div>
                         </div>
                         <div class="form-group">

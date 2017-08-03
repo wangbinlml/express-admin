@@ -32,7 +32,7 @@ $(function () {
                     if (sex == "男") {
                         row.sex = 1;
                     }
-                    return '<a class="" data-toggle="modal" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</a>'
+                    return '<a class="" data-toggle="modal" id="user_id_'+row.id+'" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#dialog_user_delete" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-remove icon-white"></i> 删除</a>'
                 }
             }
         ],
@@ -72,16 +72,19 @@ $(function () {
     $("#user_refresh").on("click", function () {
         datatable.ajax.url('/users/load?s_user_name=' + $("#s_user_name").val() + '&s_name=' + $("#s_name").val()).load();
     });
-
-    //删除
-    $("#user-remove").on("click", function () {
+    var getIds = function () {
         var ids = [];
         $(".datatable :checked").each(function () {
             var id = $(this).val();
             if (id === "all")    return true;
             ids.push(id);
         });
-        if(ids.length==0){
+        return ids;
+    };
+    //删除
+    $("#user_remove").on("click", function () {
+        var ids = getIds();
+        if (ids.length == 0) {
             new Noty({
                 type: 'warning',
                 layout: 'topCenter',
@@ -91,15 +94,8 @@ $(function () {
         }
         console.log(ids.toString())
     });
-
-    //编辑
-    $('#e-dialog-user').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        var button = $(event.relatedTarget);// Button that triggered the modal
-        var data = button.data('whatever'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        if(data) {
+    var initForm = function (modal, data) {
+        if (data) {
             modal.find('.modal-body label#user_password_desc').show();
             modal.find('.modal-body input#e_id').val(data.id);
             modal.find('.modal-body input#e_user_name').val(data.user_name);
@@ -114,6 +110,35 @@ $(function () {
             modal.find('.modal-body form select').val("-1");
         }
         modal.find('.modal-body input#e_password').val("");
+    };
+    //编辑
+    $('#e-dialog-user').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var button = $(event.relatedTarget);// Button that triggered the modal
+        var data = button.data('whatever'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        initForm(modal, data);
+    });
+
+    $("#user_edit").on("click", function () {
+        var ids = getIds();
+        if (ids.length != 1) {
+            new Noty({
+                type: 'warning',
+                layout: 'topCenter',
+                text: '请选择一条记录',
+                timeout: '2000'
+            }).show();
+            return;
+        }
+        var id = ids[0];
+        var data = $("a#user_id_"+id).attr("data-whatever");
+        var modal = $('#e-dialog-user');
+        initForm(modal, JSON.parse(data));
+        $('#e-dialog-user').modal({
+            keyboard: true
+        });
     });
     $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
         console.log($("#e-menu-role-form").serialize());

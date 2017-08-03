@@ -48,6 +48,8 @@ app.use(session({
 
 app.use(function (req, res, next) {
     //登录
+    //x-requested-with == XMLHttpRequest
+    //
     if (is_login(req)) {
         res.render("login", {msg: '您未登录或登录已超时！'});
         return;
