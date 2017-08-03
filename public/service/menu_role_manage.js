@@ -10,7 +10,6 @@ $(function () {
      * 初始化 tree view dom
      */
     function initTreeViewDom(data, targetTreeView) {
-        targetTreeView.empty();
         var menuData = data.menus;
         for (var i = 0; i < menuData.length; i++) {
             var temp = menuData[i];
@@ -30,8 +29,9 @@ $(function () {
         }
         var menuId = data.menuId;
         $("#menu-role-checkboxes").find("li[data-value]").each(function () {
-            var d_value = $(this).attr("data-value");
-            if ($.inArray(d_value, menuId)) {
+            var d_value = $(this).attr("data-value") + "";
+            if ($.inArray(d_value, menuId) != -1) {
+                console.log(d_value)
                 $(this).attr("data-checked", "1");
             }
         });
@@ -39,6 +39,8 @@ $(function () {
 
     $('#dialog_menu_role').on('show.bs.modal', function (event) {
         var targetTreeView = $("#menu-role-checkboxes");
+        targetTreeView.html("");
+
         var modal = $(this);
         var button = $(event.relatedTarget);// Button that triggered the modal
         var data = button.data('whatever'); // Extract info from data-* attributes

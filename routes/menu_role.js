@@ -26,7 +26,7 @@ router.get('/get_menu', async (req, res, next) => {
         var menuId = await mysql.querySync(sql, role_id);
         var ids = [];
         for (var i = 0; i < menuId.length; i++) {
-            ids.push(menuId[i]['menu_id']);
+            ids.push(menuId[i]['menu_id']+"");
         }
         result['data']['menuId'] = ids;
         res.status(200).json(result);
