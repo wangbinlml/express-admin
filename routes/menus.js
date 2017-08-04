@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('../core/mysql');
 const router = express.Router();
 const log = require('../core/logger').getLogger("system");
+var menu_auth = require("../core/menu_auth");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -13,7 +14,7 @@ router.get('/', (req, res, next) => {
         router: '/menus'
     });
 });
-router.get('/load', async(req, res, next) => {
+router.get('/load', async (req, res, next) => {
     var menus = req.session.menus;
     var parentMenu = {};
     for (var i = 0; i < menus.length; i++) {
@@ -64,7 +65,7 @@ router.get('/load', async(req, res, next) => {
     res.status(200).json(backResult);
 });
 
-router.get('/getParentMenu', async(req, res, next) => {
+router.get('/getParentMenu', async (req, res, next) => {
     try {
         var sql = "select * from bs_menu where parent_id=0";
         var result = await mysql.querySync(sql);
@@ -81,12 +82,13 @@ router.get('/getParentMenu', async(req, res, next) => {
         });
     }
 });
-router.get('/save', async(req, res, next) => {
+router.get('/save', async (req, res, next) => {
     var result = {
         error: 0,
         msg: ""
     };
     try {
+        var user = req.session.user;
         log.info("save menu params: ", req.query);
         var e_id = req.query.e_id;
         var e_menu_name = req.query.e_menu_name;
@@ -116,6 +118,8 @@ router.get('/save', async(req, res, next) => {
                 }
             }
             log.info("save menu ret: ", ret);
+            // session中设置菜单
+            menu_auth.setMenus(req, user['id']);
         }
         res.status(200).json(result);
     } catch (e) {
@@ -125,45 +129,58 @@ router.get('/save', async(req, res, next) => {
         res.status(200).json(result);
     }
 });
-router.delete('/delete', async(req, res, next) => {
+router.delete('/delete', async (req, res, next) => {
     var result = {
         error: 0,
         msg: ""
     };
 
-    var conn = await mysql.getConnectionSync();
-    await mysql.beginTransactionSync(conn);
-    try {
-        log.info("delete menu params: ", req.body);
-        var ids = req.body.ids;
-        if (ids && ids.trim() != "") {
+    var user = req.session.user;
+    log.info("delete menu params: ", req.body);
+    var ids = req.body.ids;
+    if (ids && ids.trim() != "") {
+        var conn = await mysql.getConnectionSync();
+        try {
             ids = ids.split(",");
+            var pSql = "select * from bs_menu where parent_id in (";
             var sql = 'delete from bs_menu_role where menu_id in (';
             var sql3 = 'delete from bs_menu where menu_id in (';
             for (var i = 0; i < ids.length; i++) {
                 if (i == 0) {
                     sql = sql + ids[i];
                     sql3 = sql3 + ids[i];
+                    pSql = pSql + ids[i];
                 } else {
                     sql = sql + "," + ids[i];
                     sql3 = sql3 + "," + ids[i];
+                    pSql = pSql + "," + ids[i];
                 }
             }
             sql = sql + ")";
             sql3 = sql3 + ")";
-            await mysql.querySync2(conn, sql);
-            await mysql.querySync2(conn, sql3);
-            await mysql.commitSync(conn);
-        } else {
+            pSql = pSql + ")";
+            var parentMenu = await mysql.querySync2(conn, pSql);
+            if (parentMenu && parentMenu.length > 0) {
+                result.error = 1;
+                result.msg = "删除项有子菜单，需要先删除子菜单";
+                await mysql.rollbackSync(conn);
+            } else {
+                await mysql.querySync2(conn, sql);
+                await mysql.querySync2(conn, sql3);
+                await mysql.commitSync(conn);
+
+                // session中设置菜单
+                await menu_auth.setMenus(req, user['id']);
+            }
+        } catch (e) {
+            log.error("delete menu ret:", e);
             result.error = 1;
-            result.msg = "删除失败，必须选择一项";
+            result.msg = "删除失败，请联系管理员";
             await mysql.rollbackSync(conn);
         }
-    } catch (e) {
-        log.error("delete menu ret:", e);
+    } else {
         result.error = 1;
-        result.msg = "删除失败，请联系管理员";
-        await mysql.rollbackSync(conn);
+        result.msg = "删除失败，必须选择一项";
     }
     res.status(200).json(result);
 });

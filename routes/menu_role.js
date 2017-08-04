@@ -17,14 +17,15 @@ router.get('/', (req, res, next) => {
 router.get('/get_menu', async (req, res, next) => {
     var result = {
         error: 0,
-        data: {
-            menus: req.session.menus,
-        }
+        data: {}
     };
     try {
         var role_id = req.query.role_id;
         var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=?";
+        var sql2 = "select * from bs_menu";
         var menuId = await mysql.querySync(sql, role_id);
+        var menus = await mysql.querySync(sql2);
+        result.data['menus'] = getAllMenu(menus);
         var ids = [];
         for (var i = 0; i < menuId.length; i++) {
             ids.push(menuId[i]['menu_id'] + "");
@@ -36,6 +37,41 @@ router.get('/get_menu', async (req, res, next) => {
         res.status(500).json(result);
     }
 });
+var getAllMenu = (menu_roles) => {
+    var menus = [];
+    if (menu_roles.length) {
+        for (var i = 0; i < menu_roles.length; i++) {
+            var menuRoleObj = menu_roles[i];
+            var parent_id = menuRoleObj['parent_id'];
+            if (parent_id == 0) {
+                var menuObj = {};
+                menuObj['parent_id'] = parent_id;
+                menuObj['menu_id'] = menuRoleObj['menu_id'];
+                menuObj['menu_name'] = menuRoleObj['menu_name'];
+                menuObj['menu_url'] = menuRoleObj['menu_url'];
+                menuObj['menu_icon'] = menuRoleObj['menu_icon'];
+                menuObj['menu_child'] = [];
+                menus.push(menuObj);
+            } else {
+                for (var j = 0; j < menus.length; j++) {
+                    var menuObj = menus[j];
+                    var pid = menuObj['menu_id'];
+                    if (pid == parent_id) {
+                        var childObj = {}, menu_id = menuRoleObj['menu_id'], menu_url = menuRoleObj['menu_url'];
+                        childObj['menu_id'] = menu_id;
+                        childObj['parent_id'] = menuRoleObj['parent_id'];
+                        childObj['menu_name'] = menuRoleObj['menu_name'];
+                        childObj['menu_url'] = menu_url;
+                        childObj['menu_icon'] = menuRoleObj['menu_icon'];
+                        menuObj['menu_child'].push(childObj);
+                    }
+                }
+            }
+
+        }
+    }
+    return menus;
+};
 router.get('/load', async (req, res, next) => {
     var sqlcount = "select count(*) count from bs_role";
     var sql = "select * from bs_role";

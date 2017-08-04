@@ -19,7 +19,7 @@ var datatables = $('#menus').DataTable({
         {
             "data": "menu_icon",
             render: function (data, type, row, meta) {
-                return '<span class="glyphicon ' + row.menu_icon + '"> (' + row.menu_icon + ')';
+                return '<span class="glyphicon ' + row.menu_icon + '">' + (row.menu_icon != "" ? '(' + row.menu_icon + ')</span>' : "无");
             }
         },
         {

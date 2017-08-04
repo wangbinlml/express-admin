@@ -7,12 +7,14 @@
             <li class="header">主菜单</li>
             <% if(menus.length > 0){ %>
             <% menus.forEach(function(item, index){ %>
-            <li class="treeview <% if(item['menu_id'] == menu_active['parent_id']){ %> active menu-open<% } %>">
-                <a href="#">
+            <li class="<% if(item['menu_child'].length > 0){ %>treeview<%}%> <% if(item['menu_id'] == menu_active['parent_id']){ %> active menu-open<% } %>">
+                <a href="<%= item['menu_url'] %>">
                     <i class="glyphicon <%= item['menu_icon'] %>"></i> <span><%= item['menu_name'] %></span>
+                    <% if(item['menu_child'].length > 0){ %>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
+                    <% } %>
                 </a>
                 <% if(item['menu_child'].length > 0){ %>
                 <ul class="treeview-menu">
