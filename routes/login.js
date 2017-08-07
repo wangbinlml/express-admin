@@ -33,6 +33,8 @@ router.post("/", async(req, res, next) => {
         req.session.user = user;
         // session中设置菜单
         await menu_auth.setMenus(req, user['id']);
+        var ip = stringUtils.getReqRemoteIp(req);
+        await mysql.querySync("insert into bs_login_log(user_id,user_name,name,ip,login_time) values(?,?,?,?,?)", [user.id, user.user_name, user.name, ip, new Date()]);
         if (is_remember) {
             res.cookie("login.username", username, {
                 // 默认有效期为10年

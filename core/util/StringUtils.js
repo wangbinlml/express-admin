@@ -48,7 +48,6 @@ module.exports.generatePassword = function (password) {
 };
 
 
-
 /**
  * 随机生成头像背景色
  * @returns {string}背景色
@@ -71,3 +70,7 @@ module.exports.createPassword = function (str) {
 module.exports.md5 = function (text) {
     return crypto.createHash('md5').update(text).digest('hex');
 };
+module.exports.getReqRemoteIp = function (req) {
+    return (req.headers['x-forwarded-for'] || '').split(',')[0] || req.ip;
+}
+;
