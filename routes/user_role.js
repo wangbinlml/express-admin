@@ -3,6 +3,8 @@ const mysql = require('../core/mysql');
 const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 const _ = require('lodash');
+const common = require('../core/common');
+
 /* GET users listing. */
 router.get('/', (req, res, next) => {
     res.render('user_role', {
@@ -12,7 +14,7 @@ router.get('/', (req, res, next) => {
         title: '用户角色管理'
     });
 });
-router.get('/load', async (req, res, next) => {
+router.get('/load', async(req, res, next) => {
     var sqlcount = "select count(*) count from bs_user";
     var sql = "select * from bs_user";
 
@@ -79,7 +81,7 @@ router.get('/load', async (req, res, next) => {
     backResult.data = data;
     res.status(200).json(backResult);
 });
-router.get('/getRole', async (req, res, next) => {
+router.get('/getRole', async(req, res, next) => {
     var result = {
         error: 0,
         data: []
@@ -94,7 +96,7 @@ router.get('/getRole', async (req, res, next) => {
         res.status(500).json(result);
     }
 });
-router.post('/setRole', async (req, res, next) => {
+router.post('/setRole', async(req, res, next) => {
     var result = {
         error: 0,
         msg: "",
@@ -116,6 +118,7 @@ router.post('/setRole', async (req, res, next) => {
                 await mysql.querySync2(conn, sql2, [e_id, e_roles[i]]);
             }
             await mysql.commitSync(conn);
+            await common.saveOperateLog(req, "绑定用户ID:" + e_id + ";roles:" + e_roles);
             res.status(200).json(result);
         } catch (e) {
             mysql.rollbackSync(conn);

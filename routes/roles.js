@@ -3,6 +3,7 @@ const mysql = require('../core/mysql');
 const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 const _ = require('lodash');
+const common = require('../core/common');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -76,6 +77,7 @@ router.get('/save', async(req, res, next) => {
                 sql = "update bs_role set role_name=?,description=? where role_id=?";
                 var params = [e_role_name, e_description, e_id];
                 ret = await mysql.querySync(sql, params);
+                await common.saveOperateLog(req, "更新角色：" + e_role_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_role where role_name=?";
                 var users = await mysql.querySync(sql, e_role_name);
@@ -85,6 +87,7 @@ router.get('/save', async(req, res, next) => {
                 } else {
                     sql = "insert bs_role(role_name, description) values (?,?)";
                     ret = await mysql.querySync(sql, [e_role_name, e_description]);
+                    await common.saveOperateLog(req, "新增角色名称：" + e_role_name);
                 }
             }
             log.info("save role ret: ", ret);
@@ -131,6 +134,7 @@ router.delete('/delete', async(req, res, next) => {
             await mysql.querySync2(conn, sql2);
             await mysql.querySync2(conn, sql3);
             await mysql.commitSync(conn);
+            await common.saveOperateLog(req, "删除角色ID: " + ids);
         } else {
             result.error = 1;
             result.msg = "删除失败，必须选择一项";

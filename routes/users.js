@@ -3,6 +3,7 @@ const mysql = require('../core/mysql');
 const router = express.Router();
 const log = require('../core/logger').getLogger("system");
 const moment = require('moment');
+const common = require('../core/common');
 const stringUtils = require('../core/util/StringUtils');
 const _ = require('lodash');
 /* GET users listing. */
@@ -14,7 +15,7 @@ router.get('/', (req, res, next) => {
         title: '用户管理'
     });
 });
-router.get('/load', async (req, res, next) => {
+router.get('/load', async(req, res, next) => {
     try {
         var sqlcount = "select count(*) count from bs_user";
         var sql = "select * from bs_user";
@@ -69,7 +70,7 @@ router.get('/load', async (req, res, next) => {
     }
 });
 
-router.get('/save', async (req, res, next) => {
+router.get('/save', async(req, res, next) => {
     var result = {
         error: 0,
         msg: ""
@@ -111,6 +112,7 @@ router.get('/save', async (req, res, next) => {
                 sql = sql + "where id=?";
                 params.push(e_id);
                 ret = await mysql.querySync(sql, params);
+                await common.saveOperateLog(req, "更新用户：" + e_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_user where user_name=?";
                 var users = await mysql.querySync(sql, e_user_name);
@@ -121,6 +123,7 @@ router.get('/save', async (req, res, next) => {
                     sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday) values (?,?,?,?,?,?,?)";
                     var password = stringUtils.createPassword(e_password.trim());
                     ret = await mysql.querySync(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday]);
+                    await common.saveOperateLog(req, "新增用户：" + e_name);
                 }
             }
             log.info("save user ret: ", ret);
@@ -133,7 +136,7 @@ router.get('/save', async (req, res, next) => {
         res.status(200).json(result);
     }
 });
-router.delete('/delete', async (req, res, next) => {
+router.delete('/delete', async(req, res, next) => {
     var result = {
         error: 0,
         msg: ""
@@ -171,6 +174,7 @@ router.delete('/delete', async (req, res, next) => {
                 await mysql.querySync2(conn, sql);
                 await mysql.querySync2(conn, sql2);
                 await mysql.commitSync(conn);
+                await common.saveOperateLog(req, "删除用户ID: " + ids);
             }
         } else {
             result.error = 1;

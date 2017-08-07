@@ -3,6 +3,7 @@ const mysql = require('../core/mysql');
 const router = express.Router();
 const log = require('../core/logger').getLogger("system");
 var menu_auth = require("../core/menu_auth");
+var common = require("../core/common");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -106,6 +107,7 @@ router.get('/save', async (req, res, next) => {
                 sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=? where menu_id=?";
                 var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, e_id];
                 ret = await mysql.querySync(sql, params);
+                await common.saveOperateLog(req, "更新菜单：" + e_menu_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_menu where menu_name=?";
                 var users = await mysql.querySync(sql, e_menu_name);
@@ -115,6 +117,7 @@ router.get('/save', async (req, res, next) => {
                 } else {
                     sql = "insert bs_menu(menu_name, parent_id,menu_url,menu_icon) values (?,?,?,?)";
                     ret = await mysql.querySync(sql, [e_menu_name, e_parent_id, e_menu_url, e_menu_icon]);
+                    await common.saveOperateLog(req, "新增菜单：" + e_menu_name);
                 }
             }
             log.info("save menu ret: ", ret);
@@ -171,6 +174,7 @@ router.delete('/delete', async (req, res, next) => {
 
                 // session中设置菜单
                 await menu_auth.setMenus(req, user['id']);
+                await common.saveOperateLog(req, "删除菜单ID: " + ids);
             }
         } catch (e) {
             log.error("delete menu ret:", e);

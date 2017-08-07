@@ -5,13 +5,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            登录
+            操作
             <small>日志</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
             <li><a href="#">系统管理</a></li>
-            <li class="active">登录日志</li>
+            <li class="active">操作日志</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -22,9 +22,9 @@
                     <div class="box-header with-border">
                         <b>工具栏： </b>
                         <caption>
-                            <button type="button" class="btn btn-default" id="login_log_refresh"><i class="fa fa-refresh icon-white"></i> 刷新
+                            <button type="button" class="btn btn-default" id="operation_log_refresh"><i class="fa fa-refresh icon-white"></i> 刷新
                             </button>
-                            <button type="button" class="btn btn-danger" id="login_log_batch_remove"><i class="fa fa-remove icon-white"></i> 删除
+                            <button type="button" class="btn btn-danger" id="operation_log_batch_remove"><i class="fa fa-remove icon-white"></i> 删除
                             </button>
                         </caption>
                         <!--<h3 class="box-title">用户列表</h3>-->
@@ -39,8 +39,8 @@
                                 </th>
                                 <th>登录名</th>
                                 <th>用户名</th>
-                                <th>登录IP</th>
-                                <th>登录时间</th>
+                                <th>操作内容</th>
+                                <th>操作时间</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -60,4 +60,4 @@
 </div>
 
 <% include partials/footer %>
-<script src="/service/login_log_manage.js"></script>
+<script src="/service/operation_log_manage.js"></script>

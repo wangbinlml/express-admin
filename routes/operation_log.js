@@ -7,16 +7,16 @@ const moment = require('moment');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-    res.render('login_log', {
+    res.render('operation_log', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/login_log'],
-        title: '登录日志'
+        menu_active: req.session.menu_active['/operation_log'],
+        title: '操作日志'
     });
 });
 router.get('/load', async(req, res, next) => {
-    var sqlcount = "select count(*) count from bs_login_log ";
-    var sql = "select * from bs_login_log ";
+    var sqlcount = "select count(*) count from bs_operation_logs ";
+    var sql = "select * from bs_operation_logs ";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -32,12 +32,12 @@ router.get('/load', async(req, res, next) => {
 
     var search = req.query.search;
     if (search) {
-        sqlcount = sqlcount + " where ip like '%" + search.value + "%'";
-        sql = sql + " where ip like '%" + search.value + "%'";
+        sqlcount = sqlcount + " where operations like '%" + search.value + "%'";
+        sql = sql + " where operations like '%" + search.value + "%'";
     }
 
     var memuCount = await mysql.querySync(sqlcount);
-    sql = sql + " ORDER BY login_time DESC limit " + start + "," + length;
+    sql = sql + " ORDER BY operate_time DESC limit " + start + "," + length;
     var result = await mysql.querySync(sql);
     var backResult = {
         draw: draw,
@@ -49,10 +49,10 @@ router.get('/load', async(req, res, next) => {
         backResult.data.push({
             id: result[i].id,
             is: result[i].id + "_",
-            ip: result[i].ip,
+            operations: result[i].operations,
             user_name: result[i].user_name,
             name: result[i].name,
-            login_time: moment(result[i].login_time).format("YYYY-MM-DD HH:mm:ss"),
+            operate_time: moment(result[i].operate_time).format("YYYY-MM-DD HH:mm:ss"),
         });
     }
     res.status(200).json(backResult);
@@ -64,11 +64,11 @@ router.delete('/delete', async(req, res, next) => {
     };
 
     try {
-        log.info("delete login log params: ", req.body);
+        log.info("delete operation log params: ", req.body);
         var ids = req.body.ids;
         if (ids && ids.trim() != "") {
             ids = ids.split(",");
-            var sql = 'delete from bs_login_log where id in (';
+            var sql = 'delete from bs_operation_logs where id in (';
             for (var i = 0; i < ids.length; i++) {
                 if (i == 0) {
                     sql = sql + ids[i];
@@ -83,7 +83,7 @@ router.delete('/delete', async(req, res, next) => {
             result.msg = "删除失败，必须选择一项";
         }
     } catch (e) {
-        log.error("delete login log ret:", e);
+        log.error("delete operation log ret:", e);
         result.error = 1;
         result.msg = "删除失败，请联系管理员";
     }
