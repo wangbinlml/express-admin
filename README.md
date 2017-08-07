@@ -10,6 +10,30 @@ git clone https://github.com/wangbinlml/express-admin.git
 cd express-admin
 npm install 
 ```
+#配置数据库
+```
+{
+  "mysql": {
+    "host": "47.93.229.22",
+    "user": "root",
+    "password": "VJQIFQeMZlUG",
+    "database": "demo",
+    "port": 3306,
+    "connectionLimit": 50,
+    "acquireTimeout": 10000,
+    "charset": "utf8"
+  },
+  "redis": {
+    "cluster": false,
+    "connect_info": [
+      {
+        "port": 6379,
+        "host": "127.0.0.1"
+      }
+    ]
+  }
+}
+```
 # Todo List
 - [X] 用户登录
 - [X] 用户管理
@@ -17,9 +41,15 @@ npm install
 - [x] 权限管理
 - [x] 用户角色管理
 - [x] 菜单权限管理
-- [ ] 数据库整理
+- [x] 数据库整理
 - [ ] 操作权限管理
 
+#demo
+```
+http://a.chenxun.org
+username: test
+password: test
+```
 # 界面预览
 
 1.登录
