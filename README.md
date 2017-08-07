@@ -4,6 +4,14 @@
 redis: v3.0+, 
 nodejs: v8.0+
 ```
+# Demo
+
+```
+http://a.chenxun.org
+username: test
+password: test
+```
+
 # 安装
 ```
 git clone https://github.com/wangbinlml/express-admin.git
@@ -44,13 +52,7 @@ npm install
 - [x] 数据库整理
 - [ ] 操作权限管理
 
-# Demo
 
-```
-http://a.chenxun.org
-username: test
-password: test
-```
 # 界面预览
 
 1.登录
