@@ -85,7 +85,7 @@ var initForm = function (modal, data) {
     } else {
         modal.find('.modal-body label#user_password_desc').hide();
         modal.find('.modal-body form input').val("");
-        modal.find('.modal-body form select').val("-1");
+        modal.find('.modal-body form select').val("0");
     }
     modal.find('.modal-body input#e_password').val("");
 };
