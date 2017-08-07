@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const commonUtil = require('./util/commonUtil');
 const config = require(commonUtil.getConfigPath() + "/db_config").mysql;
 const logger = require("./logger").getLogger("system");
-logger.info("hbb mysql config ", JSON.stringify(config));
+logger.info("mysql config ", JSON.stringify(config));
 
 const pool = mysql.createPool(config);
 pool.on('connection', (connection) => {
