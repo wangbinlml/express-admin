@@ -18,6 +18,8 @@ var menus = require('./routes/menus');
 var roles = require('./routes/roles');
 var user_role = require('./routes/user_role');
 var menu_role = require('./routes/menu_role');
+var login_log = require('./routes/login_log');
+var operation_log = require('./routes/operation_log');
 
 var app = express();
 
@@ -72,6 +74,8 @@ app.use('/menus', menus);
 app.use('/roles', roles);
 app.use('/user_role', user_role);
 app.use('/menu_role', menu_role);
+app.use('/login_log', login_log);
+app.use('/operation_log', operation_log);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

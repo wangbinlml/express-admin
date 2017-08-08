@@ -3,6 +3,7 @@ const mysql = require('../core/mysql');
 const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 const _ = require('lodash');
+const common = require('../core/common');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -128,6 +129,7 @@ router.post('/setMenu', async (req, res, next) => {
                 await mysql.querySync2(conn, sql2, [e_id, e_menus[i]]);
             }
             await mysql.commitSync(conn);
+            await common.saveOperateLog(req, "绑定菜单ID:" + e_id + ";roles:" + e_menus);
             res.status(200).json(result);
         } catch (e) {
             mysql.rollbackSync(conn);
