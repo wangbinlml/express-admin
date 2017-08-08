@@ -42,6 +42,10 @@ npm install
   }
 }
 ```
+#数据库文件
+```
+db/demo.zip
+```
 # Todo List
 - [X] 用户登录
 - [X] 用户管理
