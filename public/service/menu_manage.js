@@ -22,6 +22,8 @@ var datatables = $('#menus').DataTable({
                 return '<span class="glyphicon ' + row.menu_icon + '">' + (row.menu_icon != "" ? '(' + row.menu_icon + ')</span>' : "无");
             }
         },
+        {"data": "created_at"},
+        {"data": "modified_at"},
         {
             "data": "is",
             render: function (data, type, row, meta) {

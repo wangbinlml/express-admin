@@ -4,6 +4,7 @@ const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 const _ = require('lodash');
 const common = require('../core/common');
+var moment = require("moment");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -16,8 +17,8 @@ router.get('/', (req, res, next) => {
     });
 });
 router.get('/load', async(req, res, next) => {
-    var sqlcount = "select count(*) count from bs_role";
-    var sql = "select * from bs_role";
+    var sqlcount = "select count(*) count from bs_role where is_del=0";
+    var sql = "select * from bs_role where is_del=0";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -33,8 +34,8 @@ router.get('/load', async(req, res, next) => {
 
     var search = req.query.search;
     if (search) {
-        sqlcount = sqlcount + " where role_name like '%" + search.value + "%'";
-        sql = sql + " where role_name like '%" + search.value + "%'";
+        sqlcount = sqlcount + " and role_name like '%" + search.value + "%'";
+        sql = sql + " and role_name like '%" + search.value + "%'";
     }
 
     var memuCount = await mysql.querySync(sqlcount);
@@ -52,6 +53,8 @@ router.get('/load', async(req, res, next) => {
             is: result[i].role_id + "_",
             role_name: result[i].role_name,
             description: result[i].description,
+            created_at: result[i].created_at ? moment(result[i].created_at).format("YYYY-MM-DD HH:mm:ss") : "",
+            modified_at: result[i].modified_at != "0000-00-00 00:00:00" ? moment(result[i].modified_at).format("YYYY-MM-DD HH:mm:ss") : ""
         });
     }
     res.status(200).json(backResult);
@@ -62,6 +65,7 @@ router.get('/save', async(req, res, next) => {
         msg: ""
     };
     try {
+        var user = req.session.user;
         log.info("role save params: ", req.query);
         var e_id = req.query.e_id;
         var e_role_name = req.query.e_role_name;
@@ -74,19 +78,19 @@ router.get('/save', async(req, res, next) => {
         } else {
             var ret, sql;
             if (e_id) {
-                sql = "update bs_role set role_name=?,description=? where role_id=?";
-                var params = [e_role_name, e_description, e_id];
+                sql = "update bs_role set role_name=?,description=?, modified_id=?, modified_at=? where role_id=?";
+                var params = [e_role_name, e_description, user.id, new Date(), e_id];
                 ret = await mysql.querySync(sql, params);
                 await common.saveOperateLog(req, "更新角色：" + e_role_name + ";ID: " + e_id);
             } else {
-                sql = "select * from bs_role where role_name=?";
+                sql = "select * from bs_role where role_name=? and is_del=0";
                 var users = await mysql.querySync(sql, e_role_name);
                 if (users.length > 0) {
                     result.error = 1;
                     result.msg = "角色名已经存在！";
                 } else {
-                    sql = "insert bs_role(role_name, description) values (?,?)";
-                    ret = await mysql.querySync(sql, [e_role_name, e_description]);
+                    sql = "insert bs_role(role_name, description,creator_id) values (?,?,?)";
+                    ret = await mysql.querySync(sql, [e_role_name, e_description, user.id]);
                     await common.saveOperateLog(req, "新增角色名称：" + e_role_name);
                 }
             }
@@ -109,13 +113,14 @@ router.delete('/delete', async(req, res, next) => {
     var conn = await mysql.getConnectionSync();
     await mysql.beginTransactionSync(conn);
     try {
+        var user = req.session.user;
         log.info("delete role params: ", req.body);
         var ids = req.body.ids;
         if (ids && ids.trim() != "") {
             ids = ids.split(",");
             var sql = 'delete from bs_menu_role where role_id in (';
             var sql2 = 'delete from bs_user_role where role_id in (';
-            var sql3 = 'delete from bs_role where role_id in (';
+            var sql3 = 'update bs_role set is_del=1, modified_at=?, modified_id=? where role_id in (';
             for (var i = 0; i < ids.length; i++) {
                 if (i == 0) {
                     sql = sql + ids[i];
@@ -132,7 +137,7 @@ router.delete('/delete', async(req, res, next) => {
             sql3 = sql3 + ")";
             await mysql.querySync2(conn, sql);
             await mysql.querySync2(conn, sql2);
-            await mysql.querySync2(conn, sql3);
+            await mysql.querySync2(conn, sql3, [new Date(), user.id]);
             await mysql.commitSync(conn);
             await common.saveOperateLog(req, "删除角色ID: " + ids);
         } else {
