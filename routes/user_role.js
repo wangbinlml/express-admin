@@ -15,19 +15,19 @@ router.get('/', (req, res, next) => {
     });
 });
 router.get('/load', async(req, res, next) => {
-    var sqlcount = "select count(*) count from bs_user";
-    var sql = "select * from bs_user";
+    var sqlcount = "select count(*) count from bs_user where is_del=0";
+    var sql = "select * from bs_user where is_del=0";
 
     var s_name = req.query.s_name;
     var s_user_name = req.query.s_user_name;
 
     if (s_name) {
-        sqlcount = sqlcount + " where name like '%" + s_name.trim() + "%'";
-        sql = sql + " where name like '%" + s_name.trim() + "%'";
+        sqlcount = sqlcount + " and name like '%" + s_name.trim() + "%'";
+        sql = sql + " and name like '%" + s_name.trim() + "%'";
     }
     if (s_user_name) {
-        sqlcount = sqlcount + " where user_name like '%" + s_user_name.trim() + "%'";
-        sql = sql + " where user_name like '%" + s_user_name.trim() + "%'";
+        sqlcount = sqlcount + " and user_name like '%" + s_user_name.trim() + "%'";
+        sql = sql + " and user_name like '%" + s_user_name.trim() + "%'";
     }
 
     var start = req.query.start;
@@ -54,7 +54,7 @@ router.get('/load', async(req, res, next) => {
     for (var i in result) {
         var obj = result[i];
         var user_id = obj['id'];
-        sql = "select b.user_id,a.user_name,a.name,b.role_id,c.role_name,c.description from bs_user a left join bs_user_role b on a.id=b.user_id left join bs_role c on b.role_id=c.role_id where a.id=?";
+        sql = "select b.user_id,a.user_name,a.name,b.role_id,c.role_name,c.description from bs_user a left join bs_user_role b on a.id=b.user_id left join bs_role c on b.role_id=c.role_id where a.id=? and a.is_del=0 and c.is_del=0";
         var userRoles = await mysql.querySync(sql, user_id);
         if (userRoles.length > 0) {
             var role_name = "", role_id = "";
@@ -87,7 +87,7 @@ router.get('/getRole', async(req, res, next) => {
         data: []
     };
     try {
-        var sql = "select role_id,role_name from bs_role";
+        var sql = "select role_id,role_name from bs_role where is_del=0";
         var data = await mysql.querySync(sql);
         result['data'] = data;
         res.status(200).json(result);
