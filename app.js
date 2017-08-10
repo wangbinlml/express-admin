@@ -20,6 +20,7 @@ var user_role = require('./routes/user_role');
 var menu_role = require('./routes/menu_role');
 var login_log = require('./routes/login_log');
 var operation_log = require('./routes/operation_log');
+var log = require('./core/logger').getLogger("system");
 
 var app = express();
 
@@ -49,13 +50,15 @@ app.use(session({
 }));
 
 app.use(function (req, res, next) {
-    //登录
-    //x-requested-with == XMLHttpRequest
-    //
-    if (is_login(req)) {
+    if (req.session == undefined) {
+        var str = "无法获取session（cookie），请确保redis版本不要太旧（最好3.0+），或者redis是否连接正常。";
+        log.error(str);
+        res.render("notice", {msg: str});
+        return;
+    } else if (is_login(req)) {
         res.render("login", {msg: '您未登录或登录已超时！'});
         return;
-    } else if(menu_auth.check(req) == false){
+    } else if (menu_auth.check(req) == false) {
         //授权
         res.status(401);
         res.render('401', {
