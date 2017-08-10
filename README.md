@@ -17,6 +17,7 @@ password: test
 git clone https://github.com/wangbinlml/express-admin.git
 cd express-admin
 npm install 
+打开浏览器访问：http://127.0.0.1:3000  （3000端口可在system_config.json中配置）
 ```
 #配置数据库
 ```
@@ -41,6 +42,10 @@ npm install
     ]
   }
 }
+```
+#数据库文件
+```
+db/db.zip
 ```
 # Todo List
 - [X] 用户登录

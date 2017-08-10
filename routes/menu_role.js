@@ -22,8 +22,8 @@ router.get('/get_menu', async (req, res, next) => {
     };
     try {
         var role_id = req.query.role_id;
-        var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=?";
-        var sql2 = "select * from bs_menu";
+        var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=? and a.is_del=0";
+        var sql2 = "select * from bs_menu where is_del=0";
         var menuId = await mysql.querySync(sql, role_id);
         var menus = await mysql.querySync(sql2);
         result.data['menus'] = getAllMenu(menus);
@@ -74,8 +74,8 @@ var getAllMenu = (menu_roles) => {
     return menus;
 };
 router.get('/load', async (req, res, next) => {
-    var sqlcount = "select count(*) count from bs_role";
-    var sql = "select * from bs_role";
+    var sqlcount = "select count(*) count from bs_role where is_del=0";
+    var sql = "select * from bs_role where is_del=0";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -88,6 +88,12 @@ router.get('/load', async (req, res, next) => {
     start = parseInt(start) || 0;
     length = parseInt(length) || 0;
     draw = parseInt(draw) || 0;
+    var search = req.query.search;
+    if (search) {
+        sqlcount = sqlcount + " and role_name like '%" + search.value + "%'";
+        sql = sql + " and role_name like '%" + search.value + "%'";
+    }
+
     var memuCount = await mysql.querySync(sqlcount);
     sql = sql + " ORDER BY role_id ASC limit " + start + "," + length;
     var result = await mysql.querySync(sql);

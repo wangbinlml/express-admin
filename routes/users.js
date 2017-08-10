@@ -17,19 +17,19 @@ router.get('/', (req, res, next) => {
 });
 router.get('/load', async(req, res, next) => {
     try {
-        var sqlcount = "select count(*) count from bs_user";
-        var sql = "select * from bs_user";
+        var sqlcount = "select count(*) count from bs_user where is_del=0 ";
+        var sql = "select * from bs_user where is_del=0 ";
 
         var s_name = req.query.s_name;
         var s_user_name = req.query.s_user_name;
 
         if (s_name) {
-            sqlcount = sqlcount + " where name like '%" + s_name.trim() + "%'";
-            sql = sql + " where name like '%" + s_name.trim() + "%'";
+            sqlcount = sqlcount + " and name like '%" + s_name.trim() + "%'";
+            sql = sql + " and name like '%" + s_name.trim() + "%'";
         }
         if (s_user_name) {
-            sqlcount = sqlcount + " where user_name like '%" + s_user_name.trim() + "%'";
-            sql = sql + " where user_name like '%" + s_user_name.trim() + "%'";
+            sqlcount = sqlcount + " and user_name like '%" + s_user_name.trim() + "%'";
+            sql = sql + " and user_name like '%" + s_user_name.trim() + "%'";
         }
         var start = req.query.start;
         var length = req.query.length;
@@ -59,6 +59,8 @@ router.get('/load', async(req, res, next) => {
                 name: result[i].name,
                 mail: result[i].mail,
                 phone: result[i].tel,
+                created_at: result[i].created_at ? moment(result[i].created_at).format("YYYY-MM-DD HH:mm:ss") : "",
+                modified_at: result[i].modified_at != "0000-00-00 00:00:00" ? moment(result[i].modified_at).format("YYYY-MM-DD HH:mm:ss") : "",
                 sex: result[i].sex == "1" ? "男" : "女",
                 birthday: result[i].birthday ? moment(result[i].birthday).format("YYYY-MM-DD") : ""
             });
@@ -76,6 +78,7 @@ router.get('/save', async(req, res, next) => {
         msg: ""
     };
     try {
+        var user = req.session.user;
         log.info("user save params: ", req.query);
         var e_id = req.query.e_id;
         var e_user_name = req.query.e_user_name;
@@ -103,8 +106,8 @@ router.get('/save', async(req, res, next) => {
         } else {
             var ret, sql;
             if (e_id) {
-                sql = "update bs_user set name=?,user_name=?,birthday=?,tel=?,sex=?,mail=? ";
-                var params = [e_name, e_user_name, e_birthday || null, e_phone, e_sex, e_mail];
+                sql = "update bs_user set name=?,user_name=?,birthday=?,tel=?,sex=?,mail=?, modified_id=?, modified_at=?";
+                var params = [e_name, e_user_name, e_birthday || null, e_phone, e_sex, e_mail, user.id, new Date()];
                 if (e_password != "" || e_password.trim() != "") {
                     sql = sql + ",password=? "
                     params.push(stringUtils.createPassword(e_password.trim()));
@@ -114,15 +117,15 @@ router.get('/save', async(req, res, next) => {
                 ret = await mysql.querySync(sql, params);
                 await common.saveOperateLog(req, "更新用户：" + e_name + ";ID: " + e_id);
             } else {
-                sql = "select * from bs_user where user_name=?";
+                sql = "select * from bs_user where user_name=? and is_del=0";
                 var users = await mysql.querySync(sql, e_user_name);
                 if (users.length > 0) {
                     result.error = 1;
                     result.msg = "用户名已经存在！";
                 } else {
-                    sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday) values (?,?,?,?,?,?,?)";
+                    sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday,creator_id) values (?,?,?,?,?,?,?,?)";
                     var password = stringUtils.createPassword(e_password.trim());
-                    ret = await mysql.querySync(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday]);
+                    ret = await mysql.querySync(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday, user.id]);
                     await common.saveOperateLog(req, "新增用户：" + e_name);
                 }
             }
@@ -142,6 +145,7 @@ router.delete('/delete', async(req, res, next) => {
         msg: ""
     };
 
+    var user = req.session.user;
     var conn = await mysql.getConnectionSync();
     await mysql.beginTransactionSync(conn);
     try {
@@ -158,7 +162,7 @@ router.delete('/delete', async(req, res, next) => {
                 res.status(200).json(result);
                 return;
             } else {
-                var sql = 'delete from bs_user where id in (';
+                var sql = 'update bs_user set is_del=1, modified_at=?, modified_id=? where id in (';
                 var sql2 = 'delete from bs_user_role where user_id in (';
                 for (var i = 0; i < ids.length; i++) {
                     if (i == 0) {
@@ -171,7 +175,7 @@ router.delete('/delete', async(req, res, next) => {
                 }
                 sql = sql + ")";
                 sql2 = sql2 + ")";
-                await mysql.querySync2(conn, sql);
+                await mysql.querySync2(conn, sql, [new Date(), user.id]);
                 await mysql.querySync2(conn, sql2);
                 await mysql.commitSync(conn);
                 await common.saveOperateLog(req, "删除用户ID: " + ids);

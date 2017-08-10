@@ -21,6 +21,8 @@ var datatable = $('#users').DataTable({
         {"data": "birthday"},
         {"data": "phone"},
         {"data": "mail"},
+        {"data": "created_at"},
+        {"data": "modified_at"},
         {
             "data": "is",
             render: function (data, type, row, meta) {

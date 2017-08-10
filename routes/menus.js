@@ -4,6 +4,7 @@ const router = express.Router();
 const log = require('../core/logger').getLogger("system");
 var menu_auth = require("../core/menu_auth");
 var common = require("../core/common");
+var moment = require("moment");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -22,8 +23,8 @@ router.get('/load', async (req, res, next) => {
         var menu = menus[i];
         parentMenu[menu['menu_id']] = menu['menu_name'];
     }
-    var sqlcount = "select count(*) count from bs_menu";
-    var sql = "select * from bs_menu";
+    var sqlcount = "select count(*) count from bs_menu where is_del=0";
+    var sql = "select * from bs_menu where is_del=0";
 
     var start = req.query.start;
     var length = req.query.length;
@@ -39,8 +40,8 @@ router.get('/load', async (req, res, next) => {
 
     var search = req.query.search;
     if (search) {
-        sqlcount = sqlcount + " where menu_name like '%" + search.value + "%'";
-        sql = sql + " where menu_name like '%" + search.value + "%'";
+        sqlcount = sqlcount + " and menu_name like '%" + search.value + "%'";
+        sql = sql + " and menu_name like '%" + search.value + "%'";
     }
 
     var memuCount = await mysql.querySync(sqlcount);
@@ -60,7 +61,9 @@ router.get('/load', async (req, res, next) => {
             menu_name: result[i].menu_name,
             parent_menu_name: parentMenu[result[i].parent_id] || "无",
             menu_url: result[i].menu_url,
-            menu_icon: result[i].menu_icon
+            menu_icon: result[i].menu_icon,
+            created_at: result[i].created_at ? moment(result[i].created_at).format("YYYY-MM-DD HH:mm:ss") : "",
+            modified_at: result[i].modified_at != "0000-00-00 00:00:00" ? moment(result[i].modified_at).format("YYYY-MM-DD HH:mm:ss") : "",
         });
     }
     res.status(200).json(backResult);
@@ -68,7 +71,7 @@ router.get('/load', async (req, res, next) => {
 
 router.get('/getParentMenu', async (req, res, next) => {
     try {
-        var sql = "select * from bs_menu where parent_id=0";
+        var sql = "select * from bs_menu where parent_id=0 and is_del=0";
         var result = await mysql.querySync(sql);
         res.status(200).json({
             error: 0,
@@ -104,19 +107,19 @@ router.get('/save', async (req, res, next) => {
         } else {
             var ret, sql;
             if (e_id) {
-                sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=? where menu_id=?";
-                var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, e_id];
+                sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=?, modified_id=?, modified_at=? where menu_id=?";
+                var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, user.id, new Date(), e_id];
                 ret = await mysql.querySync(sql, params);
                 await common.saveOperateLog(req, "更新菜单：" + e_menu_name + ";ID: " + e_id);
             } else {
-                sql = "select * from bs_menu where menu_name=?";
+                sql = "select * from bs_menu where menu_name=? and is_del=0";
                 var users = await mysql.querySync(sql, e_menu_name);
                 if (users.length > 0) {
                     result.error = 1;
                     result.msg = "菜单名已经存在！";
                 } else {
-                    sql = "insert bs_menu(menu_name, parent_id,menu_url,menu_icon) values (?,?,?,?)";
-                    ret = await mysql.querySync(sql, [e_menu_name, e_parent_id, e_menu_url, e_menu_icon]);
+                    sql = "insert bs_menu(menu_name, parent_id,menu_url,menu_icon,creator_id) values (?,?,?,?,?)";
+                    ret = await mysql.querySync(sql, [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, user.id]);
                     await common.saveOperateLog(req, "新增菜单：" + e_menu_name);
                 }
             }
@@ -147,7 +150,7 @@ router.delete('/delete', async (req, res, next) => {
             ids = ids.split(",");
             var pSql = "select * from bs_menu where parent_id in (";
             var sql = 'delete from bs_menu_role where menu_id in (';
-            var sql3 = 'delete from bs_menu where menu_id in (';
+            var sql3 = 'update bs_menu set is_del=1, modified_at=?, modified_id=? where menu_id in (';
             for (var i = 0; i < ids.length; i++) {
                 if (i == 0) {
                     sql = sql + ids[i];
@@ -169,7 +172,7 @@ router.delete('/delete', async (req, res, next) => {
                 await mysql.rollbackSync(conn);
             } else {
                 await mysql.querySync2(conn, sql);
-                await mysql.querySync2(conn, sql3);
+                await mysql.querySync2(conn, sql3, [new Date(), user.id]);
                 await mysql.commitSync(conn);
 
                 // session中设置菜单
