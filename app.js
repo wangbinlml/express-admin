@@ -51,7 +51,7 @@ app.use(session({
 
 app.use(function (req, res, next) {
     if (req.session == undefined) {
-        var str = "无法获取session（cookie），请确保redis版本不要太旧（最好3.0+），或者redis是否连接正常。";
+        var str = "无法获取session（cookie），确保redis是否连接正常。";
         log.error(str);
         res.render("notice", {msg: str});
         return;
