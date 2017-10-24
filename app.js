@@ -15,6 +15,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var menus = require('./routes/menus');
+var verify = require('./routes/verify');
 var roles = require('./routes/roles');
 var user_role = require('./routes/user_role');
 var menu_role = require('./routes/menu_role');
@@ -71,6 +72,7 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', routes);
+app.use('/verify', verify);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/menus', menus);
@@ -114,7 +116,7 @@ app.use(function (err, req, res, next) {
 });
 
 function is_login(req) {
-    if (req.url.indexOf("login") == -1
+    if (req.url.indexOf("login") == -1 && req.url.indexOf("verify") == -1
         && !req.session.user) {
         return true;
     }

@@ -17,6 +17,7 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="/css/blue.css">
     <link rel="stylesheet" href="/css/noty.css">
+    <link rel="stylesheet" href="/css/style.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -56,6 +57,10 @@
                 <input type="password" id="password" class="form-control" placeholder="请输入密码">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
+            <div class="form-group has-feedback">
+                <input type="verify" id="verify" maxlength="4" class="form-control" placeholder="请输入验证码" />
+                <img src="/verify" id="yzm" />
+            </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox">
@@ -82,11 +87,17 @@
 <script src="/javascripts/bootstrap.min.js"></script>
 <script>
     $(function () {
+        $("#yzm").click(function(){
+            var url = "/verify?t=" + Math.random();
+            this.src = url;
+        });
+
         $("#username").focus();
         function login() {
             var username = $("#username").val();
             var password = $('#password').val();
             var is_remember = $('#is_remember').val();
+            var verify = $('#verify').val();
             if (username == "" || username.trim() == "") {
                 $(".login-box-msg").text('用户名不能为空');
                 new Noty({
@@ -103,12 +114,20 @@
                     text: '密码不能为空',
                     timeout: '2000'
                 }).show();
+            } else if (verify == "" || verify.trim() == "") {
+                $(".login-box-msg").text('验证码不能为空');
+                new Noty({
+                    type: 'error',
+                    layout: 'topCenter',
+                    text: '验证码不能为空',
+                    timeout: '2000'
+                }).show();
             } else {
                 console.log($("#loginForm").serialize())
                 $.ajax({
                     type: "POST",
                     url: "/login",
-                    data: {username: username, password: password, is_remember: is_remember},
+                    data: {username: username, password: password, is_remember: is_remember, verify: verify},
                     asyc: false,
                     beforeSend:function(){
                         $(".login-box-msg").html("<img src='/images/loading.gif'>");

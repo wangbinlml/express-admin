@@ -24,26 +24,32 @@ router.get('/exit', (req, res, next) => {
 /* POST */
 router.post("/", async(req, res, next) => {
     console.log(req.body)
+    var verify_code = req.session.verify_code;
     var username = req.body.username;
     var password = req.body.password;
+    var verify = req.body.verify;
     var is_remember = req.body.is_remember;
-    var sql = "select * from bs_user where user_name=? and password = ?";
-    var users = await mysql.querySync(sql, [username, stringUtils.createPassword(req.body.password)]);
-    if (users.length > 0) {
-        var user = users[0];
-        req.session.user = user;
-        // session中设置菜单
-        await menu_auth.setMenus(req, user['id']);
-        await common.saveLoginLog(req);
-        if (is_remember) {
-            res.cookie("login.username", username, {
-                // 默认有效期为10年
-                maxAge: 1000 * 60 * 60 * 24 * 365 * 10
-            });
+    if(verify_code == verify) {
+        var sql = "select * from bs_user where user_name=? and password = ?";
+        var users = await mysql.querySync(sql, [username, stringUtils.createPassword(password)]);
+        if (users.length > 0) {
+            var user = users[0];
+            req.session.user = user;
+            // session中设置菜单
+            await menu_auth.setMenus(req, user['id']);
+            await common.saveLoginLog(req);
+            if (is_remember) {
+                res.cookie("login.username", username, {
+                    // 默认有效期为10年
+                    maxAge: 1000 * 60 * 60 * 24 * 365 * 10
+                });
+            }
+            res.redirect("/");
+        } else {
+            res.status(200).json({error: 1, msg: "用户名或者密码错误"});
         }
-        res.redirect("/");
     } else {
-        res.status(200).json({error: 1, msg: "用户名或者密码错误"});
+        res.status(200).json({error: 1, msg: "验证码错误"});
     }
 });
 module.exports = router;

@@ -6,7 +6,7 @@ module.exports.check = function (req) {
     log.info("requst url:", url);
     var menu_roles = req.session.menu_roles;
     var exists = false;
-    if (url.indexOf('/login') == 0 || url == '/' || url == '/401' || url == '/error') {
+    if (url.indexOf('/login') == 0 || url == '/' || url == '/401' || url == '/error' || url.indexOf('/verify') == 0) {
         exists = true;
     } else {
         for (var i = 0; i < menu_roles.length; i++) {

@@ -1,12 +1,13 @@
 {
   "name": "express-admin",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
+    "canvas": "^1.6.7",
     "connect-redis": "^3.3.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
