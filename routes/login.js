@@ -31,7 +31,7 @@ router.post("/", async(req, res, next) => {
     var is_remember = req.body.is_remember;
     if(verify_code == verify) {
         var sql = "select * from bs_user where user_name=? and password = ?";
-        var users = await mysql.querySync(sql, [username, stringUtils.createPassword(password)]);
+        var users = await mysql.query(sql, [username, stringUtils.createPassword(password)]);
         if (users.length > 0) {
             var user = users[0];
             req.session.user = user;

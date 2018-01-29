@@ -36,9 +36,9 @@ router.get('/load', async(req, res, next) => {
         sql = sql + " where ip like '%" + search.value + "%'";
     }
 
-    var memuCount = await mysql.querySync(sqlcount);
+    var memuCount = await mysql.query(sqlcount);
     sql = sql + " ORDER BY login_time DESC limit " + start + "," + length;
-    var result = await mysql.querySync(sql);
+    var result = await mysql.query(sql);
     var backResult = {
         draw: draw,
         recordsTotal: memuCount['0']['count'],
@@ -77,7 +77,7 @@ router.delete('/delete', async(req, res, next) => {
                 }
             }
             sql = sql + ")";
-            await mysql.querySync(sql);
+            await mysql.query(sql);
         } else {
             result.error = 1;
             result.msg = "删除失败，必须选择一项";

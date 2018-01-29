@@ -38,9 +38,9 @@ router.get('/load', async(req, res, next) => {
         sql = sql + " and role_name like '%" + search.value + "%'";
     }
 
-    var memuCount = await mysql.querySync(sqlcount);
+    var memuCount = await mysql.query(sqlcount);
     sql = sql + " ORDER BY role_id DESC limit " + start + "," + length;
-    var result = await mysql.querySync(sql);
+    var result = await mysql.query(sql);
     var backResult = {
         draw: draw,
         recordsTotal: memuCount['0']['count'],
@@ -80,17 +80,17 @@ router.get('/save', async(req, res, next) => {
             if (e_id) {
                 sql = "update bs_role set role_name=?,description=?, modified_id=?, modified_at=? where role_id=?";
                 var params = [e_role_name, e_description, user.id, new Date(), e_id];
-                ret = await mysql.querySync(sql, params);
+                ret = await mysql.query(sql, params);
                 await common.saveOperateLog(req, "更新角色：" + e_role_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_role where role_name=? and is_del=0";
-                var users = await mysql.querySync(sql, e_role_name);
+                var users = await mysql.query(sql, e_role_name);
                 if (users.length > 0) {
                     result.error = 1;
                     result.msg = "角色名已经存在！";
                 } else {
                     sql = "insert bs_role(role_name, description,creator_id) values (?,?,?)";
-                    ret = await mysql.querySync(sql, [e_role_name, e_description, user.id]);
+                    ret = await mysql.query(sql, [e_role_name, e_description, user.id]);
                     await common.saveOperateLog(req, "新增角色名称：" + e_role_name);
                 }
             }
@@ -110,8 +110,8 @@ router.delete('/delete', async(req, res, next) => {
         msg: ""
     };
 
-    var conn = await mysql.getConnectionSync();
-    await mysql.beginTransactionSync(conn);
+    var conn = await mysql.getConnection();
+    await mysql.beginTransaction(conn);
     try {
         var user = req.session.user;
         log.info("delete role params: ", req.body);
@@ -135,21 +135,21 @@ router.delete('/delete', async(req, res, next) => {
             sql = sql + ")";
             sql2 = sql2 + ")";
             sql3 = sql3 + ")";
-            await mysql.querySync2(conn, sql);
-            await mysql.querySync2(conn, sql2);
-            await mysql.querySync2(conn, sql3, [new Date(), user.id]);
-            await mysql.commitSync(conn);
+            await mysql.query2(conn, sql);
+            await mysql.query2(conn, sql2);
+            await mysql.query2(conn, sql3, [new Date(), user.id]);
+            await mysql.commit(conn);
             await common.saveOperateLog(req, "删除角色ID: " + ids);
         } else {
             result.error = 1;
             result.msg = "删除失败，必须选择一项";
-            await mysql.rollbackSync(conn);
+            await mysql.rollback(conn);
         }
     } catch (e) {
         log.error("delete role ret:", e);
         result.error = 1;
         result.msg = "删除失败，请联系管理员";
-        await mysql.rollbackSync(conn);
+        await mysql.rollback(conn);
     }
     res.status(200).json(result);
 });

@@ -42,9 +42,9 @@ router.get('/load', async(req, res, next) => {
         start = parseInt(start) || 0;
         length = parseInt(length) || 0;
         draw = parseInt(draw) || 0;
-        var memuCount = await mysql.querySync(sqlcount);
+        var memuCount = await mysql.query(sqlcount);
         sql = sql + " ORDER BY id DESC limit " + start + "," + length;
-        var result = await mysql.querySync(sql);
+        var result = await mysql.query(sql);
         var backResult = {
             draw: draw,
             recordsTotal: memuCount['0']['count'],
@@ -114,18 +114,18 @@ router.get('/save', async(req, res, next) => {
                 }
                 sql = sql + "where id=?";
                 params.push(e_id);
-                ret = await mysql.querySync(sql, params);
+                ret = await mysql.query(sql, params);
                 await common.saveOperateLog(req, "更新用户：" + e_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_user where user_name=? and is_del=0";
-                var users = await mysql.querySync(sql, e_user_name);
+                var users = await mysql.query(sql, e_user_name);
                 if (users.length > 0) {
                     result.error = 1;
                     result.msg = "用户名已经存在！";
                 } else {
                     sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday,creator_id) values (?,?,?,?,?,?,?,?)";
                     var password = stringUtils.createPassword(e_password.trim());
-                    ret = await mysql.querySync(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday, user.id]);
+                    ret = await mysql.query(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday, user.id]);
                     await common.saveOperateLog(req, "新增用户：" + e_name);
                 }
             }
@@ -146,8 +146,8 @@ router.delete('/delete', async(req, res, next) => {
     };
 
     var user = req.session.user;
-    var conn = await mysql.getConnectionSync();
-    await mysql.beginTransactionSync(conn);
+    var conn = await mysql.getConnection();
+    await mysql.beginTransaction(conn);
     try {
         log.info("delete user params: ", req.body);
         var ids = req.body.ids;
@@ -156,7 +156,7 @@ router.delete('/delete', async(req, res, next) => {
         if (ids && ids.trim() != "") {
             ids = ids.split(",");
             if (_.indexOf(ids, user_id + "") != -1) {
-                await mysql.rollbackSync(conn);
+                await mysql.rollback(conn);
                 result.error = 1;
                 result.msg = "不能删除自己";
                 res.status(200).json(result);
@@ -175,21 +175,21 @@ router.delete('/delete', async(req, res, next) => {
                 }
                 sql = sql + ")";
                 sql2 = sql2 + ")";
-                await mysql.querySync2(conn, sql, [new Date(), user.id]);
-                await mysql.querySync2(conn, sql2);
-                await mysql.commitSync(conn);
+                await mysql.query2(conn, sql, [new Date(), user.id]);
+                await mysql.query2(conn, sql2);
+                await mysql.commit(conn);
                 await common.saveOperateLog(req, "删除用户ID: " + ids);
             }
         } else {
             result.error = 1;
             result.msg = "删除失败，必须选择一项";
-            await mysql.rollbackSync(conn);
+            await mysql.rollback(conn);
         }
     } catch (e) {
         log.error("delete user ret:", e);
         result.error = 1;
         result.msg = "删除失败，请联系管理员";
-        await mysql.rollbackSync(conn);
+        await mysql.rollback(conn);
     }
     res.status(200).json(result);
 });

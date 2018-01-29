@@ -24,8 +24,8 @@ router.get('/get_menu', async (req, res, next) => {
         var role_id = req.query.role_id;
         var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=? and a.is_del=0";
         var sql2 = "select * from bs_menu where is_del=0";
-        var menuId = await mysql.querySync(sql, role_id);
-        var menus = await mysql.querySync(sql2);
+        var menuId = await mysql.query(sql, role_id);
+        var menus = await mysql.query(sql2);
         result.data['menus'] = getAllMenu(menus);
         var ids = [];
         for (var i = 0; i < menuId.length; i++) {
@@ -94,9 +94,9 @@ router.get('/load', async (req, res, next) => {
         sql = sql + " and role_name like '%" + search.value + "%'";
     }
 
-    var memuCount = await mysql.querySync(sqlcount);
+    var memuCount = await mysql.query(sqlcount);
     sql = sql + " ORDER BY role_id ASC limit " + start + "," + length;
-    var result = await mysql.querySync(sql);
+    var result = await mysql.query(sql);
     var backResult = {
         draw: draw,
         recordsTotal: memuCount['0']['count'],
@@ -122,23 +122,23 @@ router.post('/setMenu', async (req, res, next) => {
     var e_id = req.body.e_id;
     var e_menus = req.body.e_menus || [];
     if (e_id && e_id != "" && e_id != 0) {
-        var conn = await mysql.getConnectionSync();
-        await mysql.beginTransactionSync(conn);
+        var conn = await mysql.getConnection();
+        await mysql.beginTransaction(conn);
         try {
             if (!_.isArray(e_menus)) {
                 e_menus = [e_menus]
             }
             var sql = "delete from bs_menu_role where role_id = ?";
             var sql2 = "insert into bs_menu_role(role_id, menu_id) values (?,?)";
-            await mysql.querySync2(conn, sql, e_id);
+            await mysql.query2(conn, sql, e_id);
             for (var i = 0; i < e_menus.length; i++) {
-                await mysql.querySync2(conn, sql2, [e_id, e_menus[i]]);
+                await mysql.query2(conn, sql2, [e_id, e_menus[i]]);
             }
-            await mysql.commitSync(conn);
+            await mysql.commit(conn);
             await common.saveOperateLog(req, "绑定菜单ID:" + e_id + ";roles:" + e_menus);
             res.status(200).json(result);
         } catch (e) {
-            mysql.rollbackSync(conn);
+            mysql.rollback(conn);
             log.error("menu_role set menu: ", e);
             result.error = 1;
             res.status(500).json(result);
