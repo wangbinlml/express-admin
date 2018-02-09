@@ -4,15 +4,15 @@
 redis: v3.0+, 
 nodejs: v8.0+
 ```
-# Demo
+# 下载地址
+https://github.com/wangbinlml/express-admin
 
-```
+# Demo地址
+
 http://a.chenxun.org
 username: test
 password: test
-```
-# 下载地址
-https://github.com/wangbinlml/express-admin
+
 
 # 安装
 ```
