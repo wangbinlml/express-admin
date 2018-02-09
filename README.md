@@ -11,7 +11,7 @@ http://a.chenxun.org
 username: test
 password: test
 ```
-# 地址
+# 下载地址
 https://github.com/wangbinlml/express-admin
 
 # 安装
