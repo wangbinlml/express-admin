@@ -146,7 +146,6 @@ module.exports.query2 = (connection, sql, values, cb) => {
         connection.query(sql, values, (error, rows) => {
             cb(error, rows);
         });
-        connection.release();
     } else {
         return new Promise((resolve, reject) => {
             connection.query(sql, values, (error, rows) => {
