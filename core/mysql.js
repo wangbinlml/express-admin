@@ -36,27 +36,29 @@ module.exports.query = (sql, values, cb) => {
     if (typeof cb == "function") {
         pool.getConnection((err, connection) => {
             if (err) {
+                connection.release();
                 cb(err);
             } else {
                 connection.query(sql, values, (error, rows) => {
+                    connection.release();
                     cb(error, rows);
                 });
-                connection.release();
             }
         });
     } else {
         return new Promise((resolve, reject) => {
             pool.getConnection((err, connection) => {
                 if (err) {
+                    connection.release();
                     reject(err);
                 } else {
-                    connection.query(sql, values, (error, rows) => {
+                    connection.query(sql, values, (error, rows) => {                        
+                        connection.release();
                         if (error)
                             reject(error);
                         else
                             resolve(rows);
                     });
-                    connection.release();
                 }
             });
         });
@@ -85,18 +87,19 @@ module.exports.beginTransaction = (connection, cb) => {
 module.exports.rollback = (connection, cb) => {
     if (typeof cb == "function") {
         connection.rollback(function () {
+            connection.release();
             cb && cb();
         });
     } else {
         return new Promise((resolve, reject) => {
             connection.rollback(function (err) {
+                connection.release();
                 if (err) {
                     reject(err);
                 } else {
                     resolve();
                 }
             });
-            connection.release();
         });
     }
 };
