@@ -1,5 +1,5 @@
 var crypto = require("crypto");
-
+var getIP = require('ipware')().get_ip;
 // 用户头像背景色
 var HEAD_COLOR_ARR = [
     "#f4a739",
@@ -71,7 +71,6 @@ module.exports.md5 = function (text) {
     return crypto.createHash('md5').update(text).digest('hex');
 };
 module.exports.getReqRemoteIp = function (req) {
-    var ip = req.headers["x-real-ip"] || req.ip;
-    return ip;
+    return getIP(req);
 }
 ;
