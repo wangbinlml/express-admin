@@ -71,6 +71,7 @@ module.exports.md5 = function (text) {
     return crypto.createHash('md5').update(text).digest('hex');
 };
 module.exports.getReqRemoteIp = function (req) {
-    return getIP(req);
+    const ipInfo = getIP(req);
+    return ipInfo.clientIp;
 }
 ;
