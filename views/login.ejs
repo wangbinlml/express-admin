@@ -85,6 +85,7 @@
 <script src="/javascripts/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/md5.js"></script>
 <script>
     $(function () {
         $("#yzm").click(function(){
@@ -127,7 +128,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/login",
-                    data: {username: username, password: password, is_remember: is_remember, verify: verify},
+                    data: {username: username, password: hex_md5(password.trim()), is_remember: is_remember, verify: verify},
                     asyc: false,
                     beforeSend:function(){
                         $(".login-box-msg").html("<img src='/images/loading.gif'>");

@@ -6,6 +6,7 @@ const moment = require('moment');
 const common = require('../core/common');
 const stringUtils = require('../core/util/StringUtils');
 const _ = require('lodash');
+var UUID = require('uuid');
 /* GET users listing. */
 router.get('/', (req, res, next) => {
     res.render('user', {
@@ -105,12 +106,15 @@ router.get('/save', async(req, res, next) => {
             result.error = 1;
         } else {
             var ret, sql;
+            var salt = UUID.v1();
             if (e_id) {
                 sql = "update bs_user set name=?,user_name=?,birthday=?,tel=?,sex=?,mail=?, modified_id=?, modified_at=?";
                 var params = [e_name, e_user_name, e_birthday || null, e_phone, e_sex, e_mail, user.id, new Date()];
                 if (e_password != "" || e_password.trim() != "") {
-                    sql = sql + ",password=? "
-                    params.push(stringUtils.createPassword(e_password.trim()));
+                    sql = sql + ",password=? ";
+                    sql = sql + ",salt=? ";
+                    params.push(stringUtils.createPassword(e_password.trim()+salt));
+                    params.push(salt);
                 }
                 sql = sql + "where id=?";
                 params.push(e_id);
@@ -123,9 +127,9 @@ router.get('/save', async(req, res, next) => {
                     result.error = 1;
                     result.msg = "用户名已经存在！";
                 } else {
-                    sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday,creator_id) values (?,?,?,?,?,?,?,?)";
-                    var password = stringUtils.createPassword(e_password.trim());
-                    ret = await mysql.query(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday, user.id]);
+                    sql = "insert bs_user(user_name, password,name,mail,tel,sex,birthday,salt,creator_id) values (?,?,?,?,?,?,?,?,?)";
+                    var password = stringUtils.createPassword(e_password.trim()+salt);
+                    ret = await mysql.query(sql, [e_user_name, password, e_name, e_mail, e_phone, e_sex, e_birthday, salt, user.id]);
                     await common.saveOperateLog(req, "新增用户：" + e_name);
                 }
             }

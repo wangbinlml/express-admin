@@ -121,11 +121,25 @@ $("#user_edit").on("click", function () {
     initForm(modal, JSON.parse(data));
 });
 $('#e-dialog-user').find('.modal-footer #saveUser').click(function () {
+    var password = $("#e_password").val();
+    var data = $("#e-menu-role-form").serialize();
+    var dts = data.split("&");
+    var str = "";
+    var list = [];
+    for (var i=0; i<dts.length; i++) {
+        var dt = dts[i];
+        if(dt.indexOf("e_password")>-1 && (password != "" && password.trim() != "")) {
+            list.push("e_password=" + hex_md5(password));
+        } else {
+            list.push(dt);
+        }
+    }
+    data = list.join("&");
     $.ajax({
         type: "get",
         url: "/users/save",
         asyc: false,
-        data: $("#e-menu-role-form").serialize(),
+        data: data,
         error: function (error) {
             new Noty({
                 type: 'error',
