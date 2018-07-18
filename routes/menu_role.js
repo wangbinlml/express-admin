@@ -4,6 +4,7 @@ const log = require('../core/logger').getLogger("system");
 const router = express.Router();
 const _ = require('lodash');
 const common = require('../core/common');
+const menu_auth = require("../core/menu_auth");
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -114,6 +115,7 @@ router.get('/load', async (req, res, next) => {
     res.status(200).json(backResult);
 });
 router.post('/setMenu', async (req, res, next) => {
+    var user = req.session.user;
     var result = {
         error: 0,
         msg: "",
@@ -135,6 +137,9 @@ router.post('/setMenu', async (req, res, next) => {
                 await mysql.query2(conn, sql2, [e_id, e_menus[i]]);
             }
             await mysql.commit(conn);
+            if(user && user['id']) {
+                await menu_auth.setMenus(req, user['id']);
+            }
             await common.saveOperateLog(req, "绑定菜单ID:" + e_id + ";roles:" + e_menus);
             res.status(200).json(result);
         } catch (e) {
