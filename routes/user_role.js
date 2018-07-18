@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
     res.render('user_role', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/user_role'],
+        menu_active: req.session.menu_active['/user_role'] || {},
         title: '用户角色管理'
     });
 });

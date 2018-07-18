@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
     res.render('user', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/users'],
+        menu_active: req.session.menu_active['/users'] || {},
         title: '用户管理'
     });
 });

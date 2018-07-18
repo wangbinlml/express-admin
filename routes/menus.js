@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
     res.render('menu', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/menus'],
+        menu_active: req.session.menu_active['/menus'] || {},
         title: '菜单管理',
         router: '/menus'
     });

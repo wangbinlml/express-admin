@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
     res.render('role', {
         user: req.session.user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/roles'],
+        menu_active: req.session.menu_active['/roles'] || {},
         title: '角色管理',
         router: '/roles'
     });
