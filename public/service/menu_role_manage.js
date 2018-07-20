@@ -81,6 +81,10 @@ $('#dialog_menu_role').on('show.bs.modal', function (event) {
     modal.find('.modal-body label#e_role_name').html(data.role_name);
 });
 $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
+    $(":indeterminate").each(function () {
+        // 将半选中状态的checkbox同样标记为选中状态
+        $(this).prop("checked", true);
+    });
     $.ajax({
         type: "post",
         url: "/menu_role/setMenu",
