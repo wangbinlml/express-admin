@@ -4,6 +4,9 @@ const _ = require('lodash');
 module.exports.check = function (req) {
     var url = req.url;
     log.info("requst url:", url);
+    var urls = url.split("/");
+    //一级路由名字
+    var cname = urls.length>0 ? "/"+urls[1] : "/";
     var menu_roles = req.session.menu_roles;
     var exists = false;
     if (url.indexOf('/login') == 0 || url == '/' || url == '/401' || url == '/error' || url.indexOf('/verify') == 0) {
@@ -12,7 +15,10 @@ module.exports.check = function (req) {
         for (var i = 0; i < menu_roles.length; i++) {
             var menu_role = menu_roles[i];
             var menu_url = menu_role['menu_url'];
-            if (menu_url != "" && url.indexOf(menu_url) == 0) {
+            if(menu_url == "/") {
+                continue;
+            }
+            if (menu_url != "" && cname == menu_url) {
                 exists = true;
                 break;
             }
