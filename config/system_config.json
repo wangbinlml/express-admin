@@ -1,4 +1,5 @@
 {
   "application_port": 3000,
-  "session_time_out_minute": 360
+  "session_time_out_minute": 360,
+  "jwtsecret": "lkasjdlifajsdio"
 }
