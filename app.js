@@ -27,6 +27,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+// 设置superSecret 全局参数
+app.set('superSecret', systemConfig.jwtsecret);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -80,6 +82,8 @@ app.use('/user_role', user_role);
 app.use('/menu_role', menu_role);
 app.use('/login_log', login_log);
 app.use('/operation_log', operation_log);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
