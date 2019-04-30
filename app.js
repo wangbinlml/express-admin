@@ -10,7 +10,6 @@ var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var redisClient = require("./core/util/RedisUtils");
 var menu_auth = require("./core/menu_auth");
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
