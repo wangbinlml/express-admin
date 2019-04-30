@@ -3,5 +3,4 @@ console.log(abc.indexOf("/users"));
 const _ = require('lodash');
 var ids = [1,2,3,4,5];
 
-console.log(_.indexOf(ids,0));
-
+console.log(_.indexOf(ids,0))
