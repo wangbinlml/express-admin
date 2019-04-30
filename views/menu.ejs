@@ -1,4 +1,7 @@
 <% include partials/header %>
+<link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css">
+
 <% include partials/sidebar %>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -36,25 +39,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="menus" class="table datatable table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th><input value="all" type="checkbox"
-                                           onclick="$('.datatable tbody :checkbox').prop('checked', this.checked);"/>
-                                </th>
-                                <th>菜单名称</th>
-                                <th>父菜单名称</th>
-                                <th>菜单URL</th>
-                                <th>菜单图标</th>
-                                <th>创建时间</th>
-                                <th>更新时间</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
+                        <table id="menus"></table>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -72,7 +57,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">角色修改</h4>
+                <h4 class="modal-title" id="exampleModalLabel">菜单操作</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="e-menu-form">
@@ -97,6 +82,22 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-10">
+                                <select name="e_type" id="e_type">
+                                    <option value="0">菜单</option>
+                                    <option value="1">操作按钮</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_flag" class="col-sm-2 control-label">菜单唯一标识</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="e_menu_flag" name="e_menu_flag" placeholder="请输入菜单唯一标识">
+                                <label>注：菜单标识必须唯一，操作按钮可以重复</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">菜单图标</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="e_menu_icon" name="e_menu_icon" placeholder="请输入菜单图标">
@@ -113,4 +114,7 @@
     </div>
 </div>
 <% include partials/footer %>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.12.0/extensions/treegrid/bootstrap-table-treegrid.js"></script>
+<script src="https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
 <script src="/service/menu_manage.js"></script>

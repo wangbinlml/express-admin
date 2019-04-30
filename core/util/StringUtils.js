@@ -1,5 +1,4 @@
 var crypto = require("crypto");
-var getIP = require('ipware')().get_ip;
 // 用户头像背景色
 var HEAD_COLOR_ARR = [
     "#f4a739",
@@ -71,7 +70,31 @@ module.exports.md5 = function (text) {
     return crypto.createHash('md5').update(text).digest('hex');
 };
 module.exports.getReqRemoteIp = function (req) {
-    const ipInfo = getIP(req);
-    return ipInfo.clientIp;
-}
-;
+    var ip = req.headers["x-real-ip"] || req.ip;
+    return ip;
+};
+/*
+ * 递归遍历
+ * @param data array
+ * @param id int
+ * return array
+ * */
+exports.MenuRecursion = (data, parent_id) => {
+    let list = [];
+    for (let index = 0; index < data.length; index++) {
+        let obj = data[ index ];
+        let v = {
+            menu_id: obj.menu_id,
+            menu_name: obj.menu_name,
+            menu_url: obj.menu_url,
+            parent_id: obj.parent_id,
+            menu_icon: obj.menu_icon,
+            type: obj.type
+        };
+        if (parent_id == obj[ 'parent_id' ]) {
+            v[ 'menu_child' ] = this.MenuRecursion(data, obj[ 'menu_id' ]);
+            list.push(v);
+        }
+    }
+    return list;
+};

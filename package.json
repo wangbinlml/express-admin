@@ -14,7 +14,6 @@
     "express": "~4.13.4",
     "express-session": "^1.15.4",
     "ioredis": "^3.1.2",
-    "ipware": "^1.0.0",
     "lodash": "^4.17.4",
     "log4js": "^2.3.1",
     "moment": "^2.18.1",
