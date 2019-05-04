@@ -6,8 +6,8 @@ ALTER TABLE bs_menu MODIFY menu_url varchar(50);
 ALTER TABLE bs_menu MODIFY menu_icon varchar(50);
 
 
-INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '新增', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1, DEFAULT, 'add')
-INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '删除', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 'delete')
-INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '修改', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 'update')
+INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '新增', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1, DEFAULT, 'add');
+INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '删除', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 'delete');
+INSERT INTO `bs_menu` (`parent_id`, `menu_name`, `menu_url`, `menu_icon`, `creator_id`, `created_at`, `modified_id`, `modified_at`, `type`, `is_del`, `menu_flag`) VALUES (6, '修改', '#', null, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 'update');
 
 
