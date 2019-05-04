@@ -4,7 +4,7 @@
  * Date: 16-9-5
  * Time: 上午11:42
  */
-//var Canvas = require('canvas');
+var Canvas = require('canvas');
 /*
  * get random float value amount [start, end)
  */
