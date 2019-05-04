@@ -49,7 +49,8 @@ npm install
 ```
 #数据库文件
 ```
-db/db.zip
+db/db.tar.gz
+db/change.sql
 ```
 # Todo List
 - [X] 用户登录
