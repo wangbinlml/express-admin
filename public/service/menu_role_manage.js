@@ -1,51 +1,40 @@
-//http://blog.csdn.net/qq_27093465/article/details/53214984
-$("#menu-role-checkboxes").bonsai({
-    expandAll: true,
-    handleDuplicateCheckboxes: true,
-    checkboxes: true, // depends on jquery.qubit plugin
-    createInputs: 'checkbox' // takes values from data-name and data-value, and data-name is inherited
-});
-/**
- * 初始化 tree view dom
- */
-function initTreeViewDom(data, targetTreeView) {
-    var menuData = data.menus;
-    for (var i = 0; i < menuData.length; i++) {
-        var temp = menuData[i];
-        var liParent = $("<li class='expanded'></li>");
-        liParent.attr("data-value", temp.menu_id);
-        liParent.html(" " + temp.menu_name);
-        var streams = temp.menu_child;
-        var ol = $("<ol></ol>");
-        for (var j = 0; j < streams.length; j++) {
-            var li = $("<li></li>");
-            li.attr("data-value", streams[j].menu_id);
-            li.html(" " + streams[j].menu_name);
-            ol.append(li);
+var setting = {
+    view: {
+        addHoverDom: false,
+        removeHoverDom: false,
+        dblClickExpand: false, //双击的时候是否切换展开状态。true为切换，false不切换
+        selectedMulti: false
+    },
+    check: {
+        enable: true,
+        chkboxType: {
+            "Y": "ps",
+            "N": "ps"
         }
-        liParent.append(ol);
-        targetTreeView.append(liParent);
+    },
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "menu_id",//节点的id
+            pIdKey: "parent_id",//节点的父节点id
+        },
+        key: {
+            name: "menu_name" //节点显示的值
+        },
+    },
+    edit: {
+        enable: false,
+        treeNodeKey: "menu_id",  //在isSimpleData格式下，当前节点id属性
+        treeNodeParentKey: "parent_id",//在isSimpleData格式下，当前节点的父节点id属性
+        showLine: true, //是否显示节点间的连线
     }
-    var menuId = data.menuId;
-    $("#menu-role-checkboxes").find("li[data-value]").each(function () {
-        var d_value = $(this).attr("data-value") + "";
-        if ($.inArray(d_value, menuId) != -1) {
-            console.log(d_value)
-            $(this).attr("data-checked", "1");
-        }
-    });
-}
+};
 
+var treeObj = null;
 $('#dialog_menu_role').on('show.bs.modal', function (event) {
-    var targetTreeView = $("#menu-role-checkboxes");
-    targetTreeView.html("");
-
     var modal = $(this);
     var button = $(event.relatedTarget);// Button that triggered the modal
     var data = button.data('whatever'); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    //var data = JSON.parse(recipient);
     var role_id = data.role_id;
     $.ajax({
         type: "get",
@@ -70,25 +59,27 @@ $('#dialog_menu_role').on('show.bs.modal', function (event) {
                 }).show();
                 $('#dialog_menu_role').modal('hide');
             } else {
-                //根据数据完成tree view dom 的拼接
-                initTreeViewDom(result.data, targetTreeView);
-                //刷新bonsai插件(每次重新获得数据之后，再次刷新一下tree view 插件)
-                targetTreeView.bonsai('update');
+                treeObj = $.fn.zTree.init($("#busTree"), setting, result.data);
             }
         }
     });
     modal.find('.modal-body input#e_id').val(data.role_id);
     modal.find('.modal-body label#e_role_name').html(data.role_name);
 });
+
 $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
-    $(":indeterminate").each(function () {
-        // 将半选中状态的checkbox同样标记为选中状态
-        $(this).prop("checked", true);
-    });
+    var menus = [];
+    var nodes = treeObj.getCheckedNodes(true);
+    for (var i = 0; i<nodes.length; i++) {
+        menus.push(nodes[i]['menu_id']);
+    }
     $.ajax({
         type: "post",
         url: "/menu_role/setMenu",
-        data: $("#e-menu-role-form").serialize(),
+        data: {
+            e_menus: menus.join(","),
+            e_id: $('#e_id').val()
+        },
         asyc: false,
         error: function (error) {
             new Noty({

@@ -114,24 +114,24 @@ router.get('/save', async (req, res, next) => {
         } else {
             if(e_menu_flag) {
                 sql = "select * from bs_menu where menu_flag=? and is_del=0 and type = 0";
-                var users = await mysql.query(sql, e_menu_flag);
-                if (users.length > 0) {
-                    result.error = 1;
-                    result.msg = "菜单唯一标识已经存在！";
-                    res.status(200).json(result);
-                    return;
+                var menus = await mysql.query(sql, e_menu_flag);
+                if (((!e_id || e_id == 0) && menus.length > 0) || (e_id && e_id != 0 && e_id != menus[0]['menu_id'])) {
+                        result.error = 1;
+                        result.msg = "菜单唯一标识已经存在！";
+                        res.status(200).json(result);
+                        return;
                 }
             }
             var ret, sql;
-            if (e_id) {
+            if (e_id && e_id != 0) {
                 sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=?, menu_flag=?, type=?, modified_id=?, modified_at=? where menu_id=?";
                 var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, e_menu_flag, e_type, user.id, new Date(), e_id];
                 ret = await mysql.query(sql, params);
                 await common.saveOperateLog(req, "更新菜单：" + e_menu_name + ";ID: " + e_id);
             } else {
                 sql = "select * from bs_menu where menu_name=? and is_del=0";
-                var users = await mysql.query(sql, e_menu_name);
-                if (users.length > 0) {
+                var menus = await mysql.query(sql, e_menu_name);
+                if (menus.length > 0) {
                     result.error = 1;
                     result.msg = "菜单名已经存在！";
                 } else {
@@ -142,7 +142,7 @@ router.get('/save', async (req, res, next) => {
             }
             log.info("save menu ret: ", ret);
             // session中设置菜单
-            menu_auth.setMenus(req, user['id']);
+            //await menu_auth.setMenus(req, user['id']);
         }
         res.status(200).json(result);
     } catch (e) {

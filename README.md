@@ -20,6 +20,8 @@ git clone https://github.com/wangbinlml/express-admin.git
 cd express-admin
 npm install 
 打开浏览器访问：http://127.0.0.1:3000  （3000端口可在system_config.json中配置）
+
+注：图片验证码使用canvas；安装请参考官网教程（https://github.com/Automattic/node-canvas）
 ```
 #配置数据库
 ```
@@ -57,7 +59,7 @@ db/db.zip
 - [x] 权限管理
 - [x] 用户角色管理
 - [x] 菜单权限管理
-- [x] 数据库整理
+- [x] 实例数据库
 - [ ] 操作权限管理
 
 
@@ -67,5 +69,11 @@ db/db.zip
 --
 ![image](public/images/login.png)
 
-2.首页
-![image](public/images/main.png)
+2.菜单管理
+--
+![image](public/images/menu.jpg)
+
+2.权限设置
+--
+![image](public/images/menu_auth.png)
+

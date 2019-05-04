@@ -35,8 +35,8 @@ $(function() {
                 initialState: 'collapsed',// 所有节点都折叠
                 // initialState: 'expanded',// 所有节点都展开，默认展开
                 treeColumn: 1,
-                // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
-                // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                expanderCollapsedClass: 'glyphicon glyphicon-plus',
                 onChange: function() {
                     $table.bootstrapTable('resetWidth');
                 }
@@ -91,7 +91,9 @@ function timeFormatter(value, row, index) {
 //初始化操作按钮的方法
 window.operateEvents = {
     'click .RoleOfadd': function (e, value, row, index) {
-        add(row.menu_id);
+        add({
+            parent_id:row.menu_id
+        });
     },
     'click .RoleOfdelete': function (e, value, row, index) {
         del(row.menu_id);
@@ -159,8 +161,12 @@ function getSelections() {
 
 }
 
-function add(id) {
-    alert("add 方法 , id = " + id);
+function add(data) {
+    var modal = $('#e-dialog-menu');
+    $('#e-dialog-menu').modal({
+        keyboard: true
+    });
+    initForm(modal, data);
 }
 function del(id) {
     removeData(id);
@@ -209,12 +215,12 @@ var initForm = function (modal, data) {
                 $('#e_parent_id').html(auxArr.join(''));
 
                 if (data) {
-                    modal.find('.modal-body input#e_id').val(data.menu_id);
-                    modal.find('.modal-body input#e_menu_name').val(data.menu_name);
-                    modal.find('.modal-body input#e_menu_url').val(data.menu_url);
-                    modal.find('.modal-body input#e_menu_icon').val(data.menu_icon);
-                    modal.find('.modal-body input#e_menu_flag').val(data.menu_flag);
-                    modal.find('.modal-body input#e_type').val(data.type);
+                    modal.find('.modal-body input#e_id').val(data.menu_id || 0);
+                    modal.find('.modal-body input#e_menu_name').val(data.menu_name || "");
+                    modal.find('.modal-body input#e_menu_url').val(data.menu_url || "");
+                    modal.find('.modal-body input#e_menu_icon').val(data.menu_icon || "");
+                    modal.find('.modal-body input#e_menu_flag').val(data.menu_flag || "");
+                    modal.find('.modal-body input#e_type').val(data.type || 0);
                     // 设置默认选项
                     modal.find('.modal-body select#e_parent_id').val(data.parent_id || 0);
                 } else {
@@ -256,15 +262,17 @@ $('#e-dialog-menu').find('.modal-footer #saveMenu').click(function () {
                     timeout: '2000'
                 }).show();
                 $('#e-dialog-menu').modal('hide');
-                $table.bootstrapTable('destroy');
-                $table.bootstrapTable();
+                $table.bootstrapTable('refresh');
             }
         }
     });
 });
 $("#menu_refresh").on("click", function () {
-    $table.bootstrapTable('destroy');
-    $table.bootstrapTable();
+    $table.bootstrapTable('refresh');
+});
+
+$("#menu_add").on("click", function () {
+    add({});
 });
 $("#menu_edit").on("click", function () {
     var ids = getSelections();

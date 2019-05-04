@@ -24,18 +24,32 @@ router.get('/get_menu', async (req, res, next) => {
     };
     try {
         var role_id = req.query.role_id;
+        // 角色 role_id 能看到和操作菜单权限
         var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=? and a.is_del=0";
+        // 所有菜单权限
         var sql2 = "select * from bs_menu where is_del=0 order by parent_id asc , menu_id asc";
-        var menuId = await mysql.query(sql, role_id);
+        var menuIds = await mysql.query(sql, role_id);
         var menus = await mysql.query(sql2);
-        result.data['menus'] = stringUtils.MenuRecursion(menus, 0);
-        var ids = [];
-        for (var i = 0; i < menuId.length; i++) {
-            ids.push(menuId[i]['menu_id'] + "");
+        //result.data['menus'] = menus;//stringUtils.MenuRecursion(menus, 0);
+        var rMenus = [];
+        for (var i = 0; i < menus.length; i++) {
+            var menu = menus[i];
+            menu['checked'] = false;
+            if (menu['parent_id'] == 0) {
+                menu['open'] = true;
+            }
+            for (var j = 0; j < menuIds.length; j++) {
+                if(menuIds[j]['menu_id']  == menu['menu_id']) {
+                    menu['checked'] = true;
+                    continue;
+                }
+            }
+            rMenus.push(menu);
         }
-        result['data']['menuId'] = ids;
+        result.data = rMenus;
         res.status(200).json(result);
     } catch (e) {
+        log.error(e);
         result.error = 1;
         res.status(500).json(result);
     }
@@ -89,8 +103,15 @@ router.post('/setMenu', async (req, res, next) => {
         data: []
     };
     var e_id = req.body.e_id;
-    var e_menus = req.body.e_menus || [];
+    var e_menus = req.body.e_menus || "";
     if (e_id && e_id != "" && e_id != 0) {
+        if(e_menus == "") {
+            result.error = 1;
+            result.msg = "菜单权限为空，请选择该角色的菜单";
+            res.status(200).json(result);
+            return;
+        }
+        e_menus = e_menus.split(",");
         var conn = await mysql.getConnection();
         await mysql.beginTransaction(conn);
         try {
