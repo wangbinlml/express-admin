@@ -29,7 +29,7 @@ router.post("/", async(req, res, next) => {
     var password = req.body.password;
     var verify = req.body.verify;
     var is_remember = req.body.is_remember;
-    if(verify_code == verify || verify == 1111) {
+    if(verify_code == verify) {
         var sql = "select * from bs_user where user_name=? and is_del=0";
         var users = await mysql.query(sql, [username]);
         if (users.length > 0) {
