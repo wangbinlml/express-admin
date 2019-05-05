@@ -35,6 +35,7 @@ router.get('/get_menu', async (req, res, next) => {
         for (var i = 0; i < menus.length; i++) {
             var menu = menus[i];
             menu['checked'] = false;
+            // 第一级菜单打开
             if (menu['parent_id'] == 0) {
                 menu['open'] = true;
             }

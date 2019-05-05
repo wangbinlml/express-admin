@@ -142,7 +142,7 @@ router.get('/save', async (req, res, next) => {
             }
             log.info("save menu ret: ", ret);
             // session中设置菜单
-            //await menu_auth.setMenus(req, user['id']);
+            await menu_auth.setMenus(req, user['id']);
         }
         res.status(200).json(result);
     } catch (e) {
