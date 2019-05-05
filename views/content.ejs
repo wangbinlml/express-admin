@@ -21,7 +21,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">系统总内存</span>
-                    <span class="info-box-number"><%=(data.totalmem)/(1024*1024*1024) %>G</span>
+                    <span class="info-box-number"><%=Math.round((data.totalmem)/(1024*1024*1024)) %>G</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -33,7 +33,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">内存空闲</span>
-                    <span class="info-box-number"><%=data.freemem/(1024*1024)%> MB</span>
+                    <span class="info-box-number"><%=(data.freemem/(1024*1024)).toFixed(2)%> MB</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
