@@ -346,7 +346,7 @@ var deleteMenuData = function (ids) {
                     text: result.msg || '删除菜单成功',
                     timeout: '2000'
                 }).show();
-                datatables.ajax.url('/menus/load').load();
+                $table.bootstrapTable('refresh');
             }
         }
     });
