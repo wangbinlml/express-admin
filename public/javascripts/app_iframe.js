@@ -2406,7 +2406,10 @@ $(function () {
                     }
                     else if (item.targetType != null && item.targetType === "iframe-tab") {
                         item.urlType = item.urlType ? item.urlType : 'relative';
-                        var href = 'addTabs({id:\'' + item.id + '\',title: \'' + item.text + '\',close: true,url: \'' + item.url + '\',urlType: \'' + item.urlType + '\'});';
+                        var href = "";
+                        if(item.url != '#' && item.url.trim() != ''){
+                            href = 'addTabs({id:\'' + item.id + '\',title: \'' + item.text + '\',close: true,url: \'' + item.url + '\',urlType: \'' + item.urlType + '\'});';
+                        }
                         $a.attr('onclick', href);
                         $a.attr('data-href', item.url);
                         $a.attr('data-id', item.id);
