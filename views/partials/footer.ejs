@@ -323,6 +323,7 @@
         });
         App.setbasePath("");
         App.setGlobalImgPath("/images/");
+        var uri = window.location.hash;
         addTabs({
             id: '0',
             title: '首页',
@@ -335,7 +336,6 @@
         showSidebarMenu();
 
         $(window).load(function() {
-            var uri = window.location.hash;
             if(uri == "/") {
                 uri = '#/welcome';
             }
