@@ -21,7 +21,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">系统总内存</span>
-                    <span class="info-box-number"><%=data.totalmem%></span>
+                    <span class="info-box-number"><%=(data.totalmem)/(1024*1024*1024) %>G</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -33,7 +33,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">内存空闲</span>
-                    <span class="info-box-number"><%=data.freemem%></span>
+                    <span class="info-box-number"><%=data.freemem/(1024*1024)%> MB</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -46,7 +46,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">系统正常运行时间</span>
-                    <span class="info-box-number"><%=data.uptime%></span>
+                    <span class="info-box-number"><%=parseInt(data.uptime/60)%> min</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -60,9 +60,9 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">系统负载</span>
-                    <span class="info-box-number" style="font-size: 15px;">5分钟：<%=data.loadavg[0]%></span>
-                    <span class="info-box-number" style="font-size: 13px;">10分钟：<%=data.loadavg[1]%></span>
-                    <span class="info-box-number" style="font-size: 12px;">15分钟：<%=data.loadavg[2]%></span>
+                    <span class="info-box-number" style="font-size: 15px;">5分钟：<%=data.loadavg[0].toFixed(2)%></span>
+                    <span class="info-box-number" style="font-size: 13px;">10分钟：<%=data.loadavg[1].toFixed(2)%></span>
+                    <span class="info-box-number" style="font-size: 12px;">15分钟：<%=data.loadavg[2].toFixed(2)%></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
