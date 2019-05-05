@@ -336,10 +336,14 @@
 
         $(window).load(function() {
             var uri = window.location.hash;
+            if(uri == "/") {
+                uri = '#/welcome';
+            }
             $("ul.treeview-menu li.treeview a").each(function (index, item) {
                 var dataHref = $(this).attr('data-href');
                 var data = "#"+dataHref;
                 if(data == uri) {
+                    console.log(111111)
                     $(this).trigger("click");
                 }
             })
