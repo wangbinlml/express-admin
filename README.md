@@ -61,8 +61,10 @@ db/change.sql
 - [x] 用户角色管理
 - [x] 菜单权限管理
 - [x] 实例数据库
+- [x] 菜单管理加入table tree
+- [x] 权限设置加入ztree
+- [x] 菜单以tab方式打开，可以同时展示多个页面
 - [ ] 操作权限管理
-
 
 # 界面预览
 
@@ -70,11 +72,15 @@ db/change.sql
 --
 ![image](public/images/login.png)
 
-2.菜单管理
+1.首页
 --
-![image](public/images/menu.jpg)
+![image](public/images/welcome.png)
 
-2.权限设置
+3.菜单管理
+--
+![image](public/images/menu.png)
+
+4.权限设置
 --
 ![image](public/images/menu_auth.png)
 

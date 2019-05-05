@@ -89,7 +89,7 @@
                             <td><%=item.name%></td>
                             <td><%=item.ip%></td>
                             <td>
-                                <%=item.login_time%>
+                                <%=moment(item.login_time).format('YYYY-MM-DD HH:mm:ss')%>
                             </td>
                         </tr>
                         <% })} else{ %>
@@ -120,7 +120,7 @@
                                 <td><%=item.name%></td>
                                 <td><%=item.operations.substr(0,20)%>...</td>
                                 <td>
-                                    <%=item.operate_time%>
+                                    <%=moment(item.operate_time).format('YYYY-MM-DD HH:mm:ss')%>
                                 </td>
                             </tr>
                         <% })} else{ %>

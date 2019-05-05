@@ -22,9 +22,11 @@ var menu_role = require('./routes/menu_role');
 var login_log = require('./routes/login_log');
 var operation_log = require('./routes/operation_log');
 var log = require('./core/logger').getLogger("system");
+var moment = require('moment');
 
 var app = express();
 
+app.locals.moment = moment;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
