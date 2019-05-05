@@ -1,53 +1,50 @@
-<% include partials/header %>
+<% include partials/iframe_header %>
 <link rel="stylesheet" href="/css/ztree/zTreeStyle.css" type="text/css">
-<% include partials/sidebar %>
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            菜单权限
-            <small>管理</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
-            <li><a href="#">权限管理</a></li>
-            <li class="active">菜单权限管理</li>
-        </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box" style="margin-bottom:auto">
-                    <div class="box-header">
-                        <h3 class="box-title">角色列表</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table id="roles" class="table datatable table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>角色名称</th>
-                                <th>描述</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.box-body -->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        菜单权限
+        <small>管理</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">权限管理</a></li>
+        <li class="active">菜单权限管理</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" style="margin-bottom:auto">
+                <div class="box-header">
+                    <h3 class="box-title">角色列表</h3>
                 </div>
-                <!-- /.box -->
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="roles" class="table datatable table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>角色名称</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
             </div>
-            <!-- /.col -->
+            <!-- /.box -->
         </div>
-        <!-- /.row -->
-    </section>
-    <!-- /.content -->
-</div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
 <div class="modal fade" id="dialog_menu_role" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -89,7 +86,7 @@
         </div>
     </div>
 </div>
-<% include partials/footer %>
+<% include partials/iframe_footer %>
 
 <script src="/javascripts/jquery.ztree.all.min.js"></script>
 <script src="/service/menu_role_manage.js"></script>

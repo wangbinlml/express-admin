@@ -1,0 +1,45 @@
+
+<!-- jQuery 3 -->
+<script src="/javascripts/jquery-2.2.3.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="/javascripts/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/moment.min.js"></script>
+<script src="/javascripts/jquery.slimscroll.min.js"></script>
+<!-- DataTables -->
+<script src="/javascripts/jquery.dataTables.min.js"></script>
+<script src="/javascripts/dataTables.bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/javascripts/adminlte.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/javascripts/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/javascripts/demo.js"></script>
+<script src="/javascripts/bootstrap-select.min.js"></script>
+<script src="/javascripts/defaults-zh_CN.min.js"></script>
+<script src="/javascripts/noty.min.js"></script>
+<script src="/javascripts/jquery.qubit.js"></script>
+<script src="/javascripts/jquery.datetimepicker.full.min.js"></script>
+<script src="/javascripts/app.js"></script>
+<!--tabs-->
+<script src="/javascripts/app_iframe.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#example2').DataTable({
+            'paging'      : true,
+            'lengthChange': true,
+            'searching'   : true,
+            'ordering'    : true,
+            'info'        : true,
+            'autoWidth'   : true
+        });
+    })
+</script>
+</body>
+</html>

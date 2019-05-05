@@ -9,7 +9,7 @@ module.exports.check = function (req) {
     var cname = urls.length>0 ? "/"+urls[1] : "/";
     var menu_roles = req.session.menu_roles;
     var exists = false;
-    if (url.indexOf('/login') == 0 || url == '/' || url == '/401' || url == '/error' || url.indexOf('/verify') == 0) {
+    if (url.indexOf('/sidebar') == 0 || url.indexOf('/welcome') == 0 || url.indexOf('/login') == 0 || url == '/' || url == '/401' || url == '/error' || url.indexOf('/verify') == 0) {
         exists = true;
     } else {
         for (var i = 0; i < menu_roles.length; i++) {
@@ -31,6 +31,13 @@ module.exports.setMenus = async (req, user_id) => {
     var sql = "select a.user_id,b.role_id,b.role_name,b.description,d.menu_id,d.parent_id,d.menu_name,d.menu_url,d.menu_icon from bs_user_role a LEFT JOIN bs_role b ON a.role_id =b.role_id LEFT JOIN bs_menu_role c ON b.role_id = c.role_id LEFT JOIN bs_menu d ON c.menu_id = d.menu_id where a.user_id=? GROUP BY d.menu_id ORDER BY d.parent_id ASC,d.menu_id ASC";
     var menu_roles = await mysql.query(sql, user_id);
     var menus = [];
+    var menus2 = [];
+    menus2.push({
+        id: "-1",
+        text: "主菜单",
+        icon: "",
+        isHeader: true
+    });
     var userRole = [];
     var menu_active = {};
     if (menu_roles.length) {
@@ -49,10 +56,21 @@ module.exports.setMenus = async (req, user_id) => {
                 menuObj['menu_icon'] = menuRoleObj['menu_icon'];
                 menuObj['menu_child'] = [];
                 menus.push(menuObj);
+
+                var menuObj2 = {};
+                menuObj2['parent_id'] = parent_id;
+                menuObj2['id'] = menuRoleObj['menu_id'];
+                menuObj2['text'] = menuRoleObj['menu_name'];
+                menuObj2['menu_url'] = menuRoleObj['menu_url'];
+                menuObj2['icon'] = menuRoleObj['menu_icon'];
+                menuObj2['children'] = [];
+                menus2.push(menuObj2);
+
                 menu_active[menuRoleObj['menu_url']] = {}
             } else {
                 for (var j = 0; j < menus.length; j++) {
                     var menuObj = menus[j];
+                    var menuObj2 = menus[j];
                     var pid = menuObj['menu_id'];
                     if (pid == parent_id) {
                         var childObj = {}, menu_id = menuRoleObj['menu_id'], menu_url = menuRoleObj['menu_url'];
@@ -62,6 +80,16 @@ module.exports.setMenus = async (req, user_id) => {
                         childObj['menu_url'] = menu_url;
                         childObj['menu_icon'] = menuRoleObj['menu_icon'];
                         menuObj['menu_child'].push(childObj);
+
+                        var childObj2 = {};
+                        childObj2['id'] = menu_id;
+                        childObj2['parent_id'] = menuRoleObj['parent_id'];
+                        childObj2['text'] = menuRoleObj['menu_name'];
+                        childObj2['url'] = menu_url;
+                        childObj2['targetType'] = "iframe-tab";
+                        childObj2['icon'] = menuRoleObj['menu_icon'];
+                        menuObj2['children'].push(childObj2);
+
                         menu_active[menu_url] = {parent_id: parent_id, menu_id: menu_id}
                     }
                 }
@@ -71,6 +99,7 @@ module.exports.setMenus = async (req, user_id) => {
     }
     req.session.userRole = userRole;
     req.session.menus = menus;
+    req.session.menus2 = menus2;
     req.session.menu_roles = menu_roles;
     req.session.menu_active = menu_active;
 };

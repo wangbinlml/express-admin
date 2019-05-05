@@ -41,9 +41,9 @@ $(function() {
                     $table.bootstrapTable('resetWidth');
                 }
             });
-
             //只展开树形的第一级节点
             $table.treegrid('getRootNodes').treegrid('expand');
+            //App.fixIframeCotent();//修正高度
 
         },
         onCheck:function(row){

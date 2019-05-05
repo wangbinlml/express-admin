@@ -1,85 +1,81 @@
-<% include partials/header %>
-<% include partials/sidebar %>
-
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            用户角色
-            <small>管理</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
-            <li><a href="#">权限管理</a></li>
-            <li class="active">用户角色管理</li>
-        </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">查询条件</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-4">
-                                <span>用户名称：</span>
-                                <input type="text" class=".col-xs-4" id="s_name" placeholder="请输入用户名称"/>
-                            </div>
-                            <div class="col-md-3 col-sm-4">
-                                <span>登录名：</span>
-                                <input type="text" class=".col-xs-4" id="s_user_name" placeholder="请输入登录名"/>
-                            </div>
-                            <div class="col-md-3 col-sm-4">
-                                <a class="btn btn-default btn-sm" href="javascript:void(0)" id="user-search"><i
-                                            class="glyphicon glyphicon-search"></i>
-                                    查询</a>
-                            </div>
+<% include partials/iframe_header %>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        用户角色
+        <small>管理</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">权限管理</a></li>
+        <li class="active">用户角色管理</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">查询条件</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-4">
+                            <span>用户名称：</span>
+                            <input type="text" class=".col-xs-4" id="s_name" placeholder="请输入用户名称"/>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <span>登录名：</span>
+                            <input type="text" class=".col-xs-4" id="s_user_name" placeholder="请输入登录名"/>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <a class="btn btn-default btn-sm" href="javascript:void(0)" id="user-search"><i
+                                        class="glyphicon glyphicon-search"></i>
+                                查询</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">用户列表</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table id="users" class="table datatable table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>用户名称</th>
-                                <th>登录名称</th>
-                                <th>角色</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.box-body -->
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">用户列表</h3>
                 </div>
-                <!-- /.box -->
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="users" class="table datatable table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名称</th>
+                            <th>登录名称</th>
+                            <th>角色</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
             </div>
-            <!-- /.col -->
+            <!-- /.box -->
         </div>
-        <!-- /.row -->
-    </section>
-    <!-- /.content -->
-</div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
 <div class="modal fade" id="dialog_user_role" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -107,7 +103,10 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">选择角色</label>
                             <div class="col-sm-10">
-                                <select id="e_roles" name="e_roles" class="selectpicker form-control" data-live-search="true" multiple data-selected-text-format="count" data-style="btn-primary" data-width="auto" data-actions-box="true" data-header="请选择权限">
+                                <select id="e_roles" name="e_roles" class="selectpicker form-control"
+                                        data-live-search="true" multiple data-selected-text-format="count"
+                                        data-style="btn-primary" data-width="auto" data-actions-box="true"
+                                        data-header="请选择权限">
                                 </select>
                             </div>
                         </div>
@@ -121,5 +120,5 @@
         </div>
     </div>
 </div>
-<% include partials/footer %>
+<% include partials/iframe_footer %>
 <script src="/service/user_role_manage.js"></script>

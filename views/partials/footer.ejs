@@ -280,7 +280,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/jquery-2.2.3.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="/javascripts/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -289,6 +289,8 @@
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="/javascripts/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="/javascripts/jquery.slimscroll.min.js"></script>
 <script src="/javascripts/moment.min.js"></script>
 <!-- DataTables -->
 <script src="/javascripts/jquery.dataTables.min.js"></script>
@@ -305,6 +307,8 @@
 <script src="/javascripts/jquery.qubit.js"></script>
 <script src="/javascripts/jquery.datetimepicker.full.min.js"></script>
 <script src="/javascripts/app.js"></script>
+<!--tabs-->
+<script src="/javascripts/app_iframe.js"></script>
 
 <!-- page script -->
 <script>
@@ -316,7 +320,17 @@
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : true
-        })
+        });
+        App.setbasePath("");
+        App.setGlobalImgPath("/images/");
+        addTabs({
+            id: '0',
+            title: '欢迎页',
+            close: false,
+            url: '/welcome',
+            urlType: "relative"
+        });
+        App.fixIframeCotent();
     })
 </script>
 </body>
