@@ -21,45 +21,7 @@
         </div>
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">主菜单</li>
-            <% if(menus.length > 0){ %>
-            <% menus.forEach(function(item, index){ %>
-            <li class="<% if(item['menu_child'].length > 0){ %>treeview<%}%> <% if(item['menu_id'] == menu_active['parent_id']){ %> active menu-open<% } %>">
-                <a href="javascript:void(0)"
-                    <% if(item['menu_url'] != "#" && item['menu_url'] != ""){ %>
-                        onclick="addTabs({id:'<%=item.menu_id%>',title: '<%= item.menu_name %>',close: true,url: '<%= item.menu_url %>',urlType: 'relative'});"
-                    <% } %>>
-                    <i class="glyphicon <%= item['menu_icon'] %>"></i> <span><%= item['menu_name'] %></span>
-                    <% if(item['menu_child'].length > 0){ %>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                    <% } %>
-                </a>
-                <% if(item['menu_child'].length > 0){ %>
-                <ul class="treeview-menu">
-                    <% item['menu_child'].forEach(function(child, index){ %>
-                    <li <% if(child['menu_id'] == menu_active['menu_id']){ %>class="active"
-                            <% } %>
-                    ><a href="javascript:void(0)"
-                         <% if(child['menu_url'] != "#" && child['menu_url'] != ""){ %>
-                            onclick="addTabs({id:'<%=child.menu_id%>',title: '<%=child.menu_name %>',close: true,url: '<%=child.menu_url%>',urlType: 'relative'});"
-                         <% } %>>
-                         <i class="fa fa-circle-o"></i> <%= index + 1 %>：<%= child['menu_name'] %></a></li>
-                    <% }) %>
-                </ul>
-                <% } %>
-            </li>
-            <% })} else{ %>
-            <li class="treeview">
-                <a href="javascript:void(0)">
-                    <i class="glyphicon"></i> <span>暂无菜单</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-            </li>
-            <% } %>
+
         </ul>
     </section>
     <!-- /.sidebar -->

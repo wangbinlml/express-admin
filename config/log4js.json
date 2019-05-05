@@ -18,7 +18,7 @@
       "appenders": [
         "console"
       ],
-      "level": "debug"
+      "level": "info"
     },
     "express": {
       "appenders": [

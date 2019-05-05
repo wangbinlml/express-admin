@@ -7,7 +7,8 @@
     "port": 3306,
     "connectionLimit": 50,
     "acquireTimeout": 10000,
-    "charset": "utf8"
+    "charset": "utf8",
+    "db_prefix": "bs_"
   },
   "mongodb": {
     "db_type": "mongodb",

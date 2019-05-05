@@ -98,3 +98,24 @@ exports.MenuRecursion = (data, parent_id) => {
     }
     return list;
 };
+
+exports.sidebarRecursion = (data, parent_id) => {
+    let list = [];
+    for (let index = 0; index < data.length; index++) {
+        let obj = data[ index ];
+        let v = {
+            id: obj.menu_id,
+            text: obj.menu_name,
+            url: obj.menu_url,
+            parent_id: obj.parent_id,
+            icon: obj.menu_icon,
+            targetType: 'iframe-tab',
+            type: obj.type
+        };
+        if (parent_id == obj[ 'parent_id' ]) {
+            v[ 'children' ] = this.sidebarRecursion(data, obj[ 'menu_id' ]);
+            list.push(v);
+        }
+    }
+    return list;
+};

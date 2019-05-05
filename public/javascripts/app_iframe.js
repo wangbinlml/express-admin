@@ -2357,7 +2357,11 @@ $(function () {
 
                 //标题
                 var $title = $('<span class="title"></span>');
-                $title.addClass('menu-text').text(item.text);
+                if (item.parent_id == 0) {
+                    $title.addClass('menu-text').text(item.text);
+                } else {
+                    $title.addClass('menu-text').text((i + 1) + "：" + item.text);
+                }
 
                 $a.append($icon);
                 $a.append($title);

@@ -6,7 +6,7 @@
         <small>Control panel</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dashboard</li>
     </ol>
 </section>
@@ -14,50 +14,126 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>150</h3>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-cog"></i></span>
 
-                    <p>New Orders</p>
+                <div class="info-box-content">
+                    <span class="info-box-text">系统总内存</span>
+                    <span class="info-box-number"><%=data.totalmem%></span>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-bag"></i>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-thumbs-o-up"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">内存空闲</span>
+                    <span class="info-box-number"><%=data.freemem%></span>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">系统正常运行时间</span>
+                    <span class="info-box-number"><%=data.uptime%></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">系统负载</span>
+                    <span class="info-box-number" style="font-size: 15px;">5分钟：<%=data.loadavg[0]%></span>
+                    <span class="info-box-number" style="font-size: 13px;">10分钟：<%=data.loadavg[1]%></span>
+                    <span class="info-box-number" style="font-size: 12px;">15分钟：<%=data.loadavg[2]%></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box">
+                <div class="box-header with-border"><h3 class="box-title">登录</h3></div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>用户名</th>
+                            <th>登录IP</th>
+                            <th>登录时间</th>
+                        </tr>
+                        <% if(login_time.length > 0){ %>
+                        <% login_time.forEach(function(item, index){ %>
+                        <tr>
+                            <td><%=index+1%></td>
+                            <td><%=item.name%></td>
+                            <td><%=item.ip%></td>
+                            <td>
+                                <%=item.login_time%>
+                            </td>
+                        </tr>
+                        <% })} else{ %>
+                            <tr>
+                                <td colspan="4">暂时数据</td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-green">
-                <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                    <p>Bounce Rate</p>
+        <div class="col-md-6">
+            <div class="box">
+                <div class="box-header with-border"><h3 class="box-title">操作记录</h3></div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>用户名</th>
+                            <th>操作</th>
+                            <th>时间</th>
+                        </tr>
+                        <% if(operation_logs.length > 0){ %>
+                            <% operation_logs.forEach(function(item, index){ %>
+                            <tr>
+                                <td><%=index+1%></td>
+                                <td><%=item.name%></td>
+                                <td><%=item.operations.substr(0,20)%>...</td>
+                                <td>
+                                    <%=item.operate_time%>
+                                </td>
+                            </tr>
+                        <% })} else{ %>
+                            <tr>
+                                <td colspan="4">暂时数据</td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-yellow">
-                <div class="inner">
-                    <h3>44</h3>
 
-                    <p>User Registrations</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-person-add"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
     </div>
 </section>
 <!-- /.content -->
