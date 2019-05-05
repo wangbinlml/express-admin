@@ -1925,6 +1925,9 @@ var addTabs = function (options) {
         var basePath = "";//window.location.pathname + "/../";
         options.url = basePath + options.url;
     }
+    // 更改浏览器地址
+    var json={time:new Date().getTime()};
+    window.history.pushState(json,"", "#" + options.url);
 
     var pageId = options.id;
 
@@ -2405,6 +2408,8 @@ $(function () {
                         item.urlType = item.urlType ? item.urlType : 'relative';
                         var href = 'addTabs({id:\'' + item.id + '\',title: \'' + item.text + '\',close: true,url: \'' + item.url + '\',urlType: \'' + item.urlType + '\'});';
                         $a.attr('onclick', href);
+                        $a.attr('data-href', item.url);
+                        $a.attr('data-id', item.id);
                     }
                     else if (item.targetType != null && item.targetType === "iframe") { //代表单iframe页面
                         $a.attr("href", item.url);

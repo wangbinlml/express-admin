@@ -115,7 +115,7 @@ router.get('/save', async (req, res, next) => {
             if(e_menu_flag) {
                 sql = "select * from bs_menu where menu_flag=? and is_del=0 and type = 0";
                 var menus = await mysql.query(sql, e_menu_flag);
-                if (((!e_id || e_id == 0) && menus.length > 0) || (e_id && e_id != 0 && e_id != menus[0]['menu_id'])) {
+                if (((!e_id || e_id == 0) && menus.length > 0) || (e_id && e_id != 0 && menus.length > 0 && e_id != menus[0]['menu_id'])) {
                         result.error = 1;
                         result.msg = "菜单唯一标识已经存在！";
                         res.status(200).json(result);

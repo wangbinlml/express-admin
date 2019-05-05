@@ -105,6 +105,7 @@ $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
                     timeout: '5000'
                 }).show();
                 $('#dialog_menu_role').modal('hide');
+                showSidebarMenu();
                 //datatable.ajax.url('/menu_role/load').load();
                 window.location.href = "/menu_role";
             }

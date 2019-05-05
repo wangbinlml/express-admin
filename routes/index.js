@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
         title: '首页'
     });
 });
-router.get('/welcome', async function (req, res, next) {
+router.get('/welcome', a sync function (req, res, next) {
 
     //获取cpu(处理器架构)
     var arch=os.arch();

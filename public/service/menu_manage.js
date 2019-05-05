@@ -263,6 +263,7 @@ $('#e-dialog-menu').find('.modal-footer #saveMenu').click(function () {
                 }).show();
                 $('#e-dialog-menu').modal('hide');
                 $table.bootstrapTable('refresh');
+                showSidebarMenu();
             }
         }
     });
