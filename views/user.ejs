@@ -37,16 +37,22 @@
                         <button type="button" class="btn btn-default" id="user_refresh"><i
                                     class="fa fa-refresh icon-white"></i> 刷新
                         </button>
+                        <% if(permissions.add) { %>
                         <button type="button" class="btn btn-success" id="user_add" data-toggle="modal"
                                 data-target="#e-dialog-user" data-whatever=""><i
                                     class="glyphicon glyphicon-edit icon-white"></i> 新增
                         </button>
+                        <%}%>
+                        <% if(permissions.update) { %>
                         <button type="button" class="btn btn-info" id="user_edit" data-toggle="modal" id="user-edit"><i
                                     class="fa fa-edit icon-white"></i> 编辑
                         </button>
+                        <%}%>
+                        <% if(permissions.delete) { %>
                         <button type="button" class="btn btn-danger" id="user_batch_remove"><i
                                     class="fa fa-remove icon-white"></i> 删除
                         </button>
+                        <%}%>
                         <button type="button" class="btn btn-info" id="user_find" onclick="optionUserData(this);"><i
                                     class="glyphicon glyphicon-zoom-in icon-white"></i> 详情
                         </button>
@@ -172,5 +178,11 @@
     </div>
 </div>
 <% include partials/iframe_footer %>
+
+<!-注入权限参数给datatable 中操作按钮使用->
+<script type="application/javascript">
+    var permissions = JSON.parse('<%- JSON.stringify(permissions) %>');
+</script>
+
 <script src="/javascripts/md5.js"></script>
 <script src="/service/user_manage.js"></script>

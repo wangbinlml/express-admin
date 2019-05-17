@@ -33,7 +33,15 @@ var datatable = $('#users').DataTable({
                 if (sex == "男") {
                     row.sex = 1;
                 }
-                return '<a class="" data-toggle="modal" id="user_id_' + row.id + '" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;<a name="' + row.id + '" onclick="removeData(' + row.id + ')" class="user_remove"><i class="fa fa-remove icon-white"></i> 删除</a>';
+                // 判断菜单权限
+                var operate = "";
+                if(permissions.update) {
+                    operate = operate + '<a class="" data-toggle="modal" id="user_id_' + row.id + '" data-target="#e-dialog-user" data-whatever=\'' + JSON.stringify(row) + '\'><i class="fa fa-edit icon-white"></i> 编辑</a>&nbsp;&nbsp;';
+                }
+                if(permissions.delete) {
+                    operate = operate + '<a name="' + row.id + '" onclick="removeData(' + row.id + ')" class="user_remove"><i class="fa fa-remove icon-white"></i> 删除</a>';
+                }
+                return operate;
             }
         }
     ],

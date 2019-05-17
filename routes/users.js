@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('../core/mysql');
+const perm = require('../core/permissions');
 const router = express.Router();
 const log = require('../core/logger').getLogger("system");
 const moment = require('moment');
@@ -8,11 +9,15 @@ const stringUtils = require('../core/util/StringUtils');
 const _ = require('lodash');
 var UUID = require('uuid');
 /* GET users listing. */
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
+    let user = req.session.user;
+    let menu_active = req.session.menu_active['/users'] || {};
+    let permissions = await perm.getPermissions(req,user.id,menu_active.menu_id);
     res.render('user', {
-        user: req.session.user,
+        user: user,
         menus: req.session.menus,
-        menu_active: req.session.menu_active['/users'] || {},
+        menu_active: menu_active,
+        permissions: permissions,
         title: '用户管理'
     });
 });
