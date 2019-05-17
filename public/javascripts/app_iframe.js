@@ -1937,7 +1937,7 @@ var addTabs = function (options) {
         //创建新TAB的title
         // title = '<a  id="tab_' + pageId + '"  data-id="' + pageId + '"  class="menu_tab" >';
 
-        var $title = $('<a href="javascript:void(0);"></a>').attr(pageIdField, pageId).addClass("menu_tab");
+        var $title = $('<a href="javascript:void(0);"></a>').attr(pageIdField, pageId).attr("data-url", options.url).addClass("menu_tab");
 
         var $text = $("<span class='page_tab_title'></span>").text(options.title).appendTo($title);
         // title += '<span class="page_tab_title">' + options.title + '</span>';
@@ -2240,6 +2240,9 @@ function activeTabByPageId(pageId) {
     findTabPanel(pageId).addClass("active");
     // scrollToTab($('.menu_tab.active'));
     scrollToTab($title[0]);
+    // 更改浏览器地址
+    var json={time:new Date().getTime()};
+    window.history.pushState(json,"", "#" + findTabTitle(pageId)[0].dataset.url);
 }
 
 $(function () {

@@ -10,7 +10,11 @@ const stringUtils = require('../core/util/StringUtils');
  * @param menu_id
  * @return {Promise<void>}
  */
-module.exports.getPermissions = async (req, user_id, menu_id) => {
+module.exports.getPermissions = async (req) => {
+    let user = req.session.user;
+    let menu_active = req.session.menu_active['/users'] || {};
+    let user_id = user.id;
+    let menu_id = menu_active.menu_id;
     let sql = "select a.menu_id,a.menu_name,a.menu_url,a.menu_flag from bs_menu a " +
         "inner join bs_menu_role b on a.menu_id = b.menu_id " +
         "inner join bs_user_role c on b.role_id = c.role_id " +
@@ -25,3 +29,7 @@ module.exports.getPermissions = async (req, user_id, menu_id) => {
     //:TODO 缓存
     return obj;
 };
+module.exports.permission = async (req, operate) => {
+    let permissions = await this.getPermissions(req);
+    return permissions[operate];
+}

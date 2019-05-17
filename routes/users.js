@@ -12,7 +12,7 @@ var UUID = require('uuid');
 router.get('/', async (req, res, next) => {
     let user = req.session.user;
     let menu_active = req.session.menu_active['/users'] || {};
-    let permissions = await perm.getPermissions(req,user.id,menu_active.menu_id);
+    let permissions = await perm.getPermissions(req);
     res.render('user', {
         user: user,
         menus: req.session.menus,
@@ -113,6 +113,15 @@ router.get('/save', async(req, res, next) => {
             var ret, sql;
             var salt = UUID.v1();
             if (e_id) {
+                // 判断是否有更新权限
+                let updatePermission = await perm.permission(req, 'update');
+                if(!updatePermission) {
+                    result.error = 1;
+                    result.msg = "保存失败，没有更新权限，请联系管理员";
+                    res.status(200).json(result);
+                    return;
+                }
+
                 sql = "update bs_user set name=?,user_name=?,birthday=?,tel=?,sex=?,mail=?, modified_id=?, modified_at=?";
                 var params = [e_name, e_user_name, e_birthday || null, e_phone, e_sex, e_mail, user.id, new Date()];
                 if (e_password != "" || e_password.trim() != "") {
@@ -126,6 +135,15 @@ router.get('/save', async(req, res, next) => {
                 ret = await mysql.query(sql, params);
                 await common.saveOperateLog(req, "更新用户：" + e_name + ";ID: " + e_id);
             } else {
+
+                // 判断是否有新增权限
+                let addPermission = await perm.permission(req, 'add');
+                if(!addPermission) {
+                    result.error = 1;
+                    result.msg = "保存失败，没有新增权限，请联系管理员";
+                    res.status(200).json(result);
+                    return;
+                }
                 sql = "select * from bs_user where user_name=? and is_del=0";
                 var users = await mysql.query(sql, e_user_name);
                 if (users.length > 0) {
@@ -153,7 +171,14 @@ router.delete('/delete', async(req, res, next) => {
         error: 0,
         msg: ""
     };
-
+    // 判断是否有删除权限
+    let deletePermission = await perm.permission(req, 'delete');
+    if(!deletePermission) {
+        result.error = 1;
+        result.msg = "删除失败，没有删除权限，请联系管理员";
+        res.status(200).json(result);
+        return;
+    }
     var user = req.session.user;
     var conn = await mysql.getConnection();
     await mysql.beginTransaction(conn);
